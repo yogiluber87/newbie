@@ -55,6 +55,14 @@ Route::put('admin/biodata/{biodata}', [Admin::class, 'edit_bio'])->middleware('a
 Route::get('admin/mutasi', [Admin::class, 'list_mutasi'])->middleware('admin');
 Route::get('admin/mutasi/{siswa}', [Admin::class, 'mutasi_form'])->middleware('admin');
 Route::post('admin/mutasi/{siswa}', [Admin::class, 'edit_mutasi'])->middleware('admin');
+Route::delete('/admin/mutasi/{mutation}', [Admin::class, 'delete_mutasi'])->name('mutasi.delete');
 Route::get('admin/print', [Printer::class, 'daftar_siswa'])->middleware('admin');
 Route::get('admin/print/{siswa}', [Printer::class, 'data_siswa'])->middleware('auth');
+
+// // tampil semua mutasi
+// Route::get('/admin/mutasi', [AdminController::class, 'index']);
+
+// hapus mutasi by NISN
+Route::delete('/admin/mutasi/{nisn}', [AdminController::class, 'destroy']);
+
 

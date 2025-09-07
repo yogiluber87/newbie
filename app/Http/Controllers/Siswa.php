@@ -28,26 +28,26 @@ class Siswa extends Controller
 
     public function edit_bio(Request $request, Biodata $biodata){
         $validated = $request->validate([
-            'alamat' => 'required|string',
-            'kota' => 'required|string',
-            'kecamatan' => 'required|string',
-            'tempat_lahir' => 'required|string',
-            'tanggal_lahir' => 'required',
-            'anak_ke' => 'required|gt:0',
+            'alamat' => 'nullable|string',
+            'kota' => 'nullable|string',
+            'kecamatan' => 'nullable|string',
+            'tempat_lahir' => 'nullable|string',
+            'tanggal_lahir' => 'nullable',
+            'anak_ke' => 'nullable|gt:0',
             'jlh_saudara' => 'nullable|gt:0',
             'saudara_tiri' => 'nullable|gt:0',
             'saudara_angkat' => 'nullable|gt:0',
-            'bahasa' => 'required',
-            'agama' => 'required',
-            'jarak' => 'required|gt:0',
+            'bahasa' => 'nullable',
+            'agama' => 'nullable',
+            'jarak' => 'nullable|gt:0',
             'nomor_hp' => 'nullable|string|max:13|regex:/[0-9]/',
-            'goldar' => 'required',
-            'tinggi' => 'required|gt:50',
-            'berat' => 'required|gt:20',
+            'goldar' => 'nullable',
+            'tinggi' => 'nullable|gt:300',
+            'berat' => 'nullable|gt:150',
             'penyakit' => 'nullable|string',
             'hobi' => 'nullable|string',
-            'kewarganegaraan' => 'required|string',
-            'sekolah_asal' => 'required',
+            'kewarganegaraan' => 'nullable|string',
+            'sekolah_asal' => 'nullable',
         ]);
         
         Biodata::where('uri', $biodata->uri)->update($validated);
@@ -63,17 +63,17 @@ class Siswa extends Controller
 
     public function edit_dad(Request $request, Dad $dad){
         $validated = $request->validate([
-            'nama' => 'required|string',
-            'tempat_lahir' => 'required|string',
-            'tanggal_lahir' => 'required|string',
-            'agama' => 'required',
-            'kewarganegaraan' => 'required|string',
-            'pekerjaan' => 'required|string',
-            'pendidikan' => 'required',
-            'penghasilan' => 'required|numeric',
-            'alamat' => 'required|string|max:200',
-            'nomor_hp' => 'required|string|max:13|regex:/[0-9]/',
-            'status' => 'required',
+            'nama' => 'nullable|string',
+            'tempat_lahir' => 'nullable|string',
+            'tanggal_lahir' => 'nullable|string',
+            'agama' => 'nullable',
+            'kewarganegaraan' => 'nullable|string',
+            'pekerjaan' => 'nullable|string',
+            'pendidikan' => 'nullable',
+            'penghasilan' => 'nullable|numeric',
+            'alamat' => 'nullable|string|max:200',
+            'nomor_hp' => 'nullable|string|max:13|regex:/[0-9]/',
+            'status' => 'nullable',
         ]);
         Dad::where('uri', $dad->uri)->update($validated);
         return redirect('/home')->with('Updated', 'Data ayah siswa berhasil diperbarui');
@@ -88,17 +88,17 @@ class Siswa extends Controller
 
     public function edit_mom(Request $request, Mom $mom){
         $validated = $request->validate([
-            'nama' => 'required|string',
-            'tempat_lahir' => 'required|string',
-            'tanggal_lahir' => 'required|string',
-            'agama' => 'required',
-            'kewarganegaraan' => 'required|string',
-            'pekerjaan' => 'required|string',
-            'pendidikan' => 'required',
+            'nama' => 'nullable|string',
+            'tempat_lahir' => 'nullable|string',
+            'tanggal_lahir' => 'nullable|string',
+            'agama' => 'nullable',
+            'kewarganegaraan' => 'nullable|string',
+            'pekerjaan' => 'nullable|string',
+            'pendidikan' => 'nullable',
             'penghasilan' => 'nullable|numeric',
-            'alamat' => 'required|string|max:200',
-            'nomor_hp' => 'required|string|max:13|regex:/[0-9]/',
-            'status' => 'required',
+            'alamat' => 'nullable|string|max:200',
+            'nomor_hp' => 'nullable|string|max:13|regex:/[0-9]/',
+            'status' => 'nullable',
         ]);
         Mom::where('uri', $mom->uri)->update($validated);
         return redirect('/home')->with('Updated', 'Data ibu siswa berhasil diperbarui');

@@ -192,7 +192,7 @@
               <td>{{'Rp. '.number_format($res->ayah->penghasilan, 2,',', '.')}}</td>
             </tr>
             <tr>
-              <th>Nomor Telefon</th>
+              <th>Nomor Telepon</th>
               <td>:</td>
               <td>{{$res->ayah->nomor_hp}}</td>
             </tr>
@@ -246,7 +246,7 @@
               <td>{{'Rp. '.number_format($res->ibu->penghasilan, 2,',', '.')}}</td>
             </tr>
             <tr>
-              <th>Nomor Telefon</th>
+              <th>Nomor Telepon</th>
               <td>:</td>
               <td>{{$res->ibu->nomor_hp}}</td>
             </tr>

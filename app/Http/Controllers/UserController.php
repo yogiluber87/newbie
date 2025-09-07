@@ -55,7 +55,7 @@ class UserController extends Controller
             'group_id' => 'required',
             'year_id' => 'required',
             'jenis_kelamin' => 'required',
-            'email' => 'required|email:dns',
+            'email' => 'nullable|email:dns|unique:users,email',
             'foto' => 'nullable|image|file|max:1024',
         ]);
         if($request->file('foto')){
@@ -118,7 +118,7 @@ class UserController extends Controller
             'jenis_kelamin' => 'required',
             'group_id' => 'required',
             'year_id' => 'required',
-            'email' => 'required|email:dns',
+            'email' => 'nullable|email:dns',
             'foto' => 'nullable|image|file|max:1024',
         ]);
         if ($request->file('foto')) {
@@ -149,4 +149,10 @@ class UserController extends Controller
         $siswa->delete();
         return redirect('/admin/siswa')->with('success', 'Data siswa berhasil dihapus');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
 }

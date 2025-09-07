@@ -18,13 +18,14 @@
                 <th>Nomor Telefon</th>
               </thead>
               @foreach ($res->siswa as $item)
-                  <tr>
-                    <td><input type="checkbox" name="daftar[]" value="{{$item->id}}" class="form-check-input"></td>
-                    <td>{{$item->nama_lengkap}}</td>
-                    <td>{{$item->biodata->alamat}}</td>
-                    <td>{{$item->biodata->nomor_hp}}</td>
-                  </tr>
-              @endforeach
+              <tr>
+                <td><input type="checkbox" name="daftar[]" value="{{ $item->id }}" class="form-check-input"></td>
+                <td>{{ $item->nama_lengkap }}</td>
+                <td>{{ optional($item->biodata)->alamat ?? '-' }}</td>
+                <td>{{ optional($item->biodata)->nomor_hp ?? '-' }}</td>
+              </tr>
+            @endforeach
+
             </table>
             <div class="mb-3">
               <label for="group_id" class="form-label">Pindah menuju kelas</label>

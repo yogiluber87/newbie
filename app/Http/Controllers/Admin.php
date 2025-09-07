@@ -56,14 +56,14 @@ class Admin extends Controller
         $validated = $request->validate([
             'nama' => 'required|string',
             'tempat_lahir' => 'required|string',
-            'tanggal_lahir' => 'required|string',
+            'tanggal_lahir' => 'required|date',
             'agama' => 'required',
             'kewarganegaraan' => 'required|string',
             'pekerjaan' => 'required|string',
             'pendidikan' => 'required',
-            'penghasilan' => 'required|numeric',
+            'penghasilan' => 'nullable|numeric|min:0',
             'alamat' => 'required|string|max:200',
-            'nomor_hp' => 'required|string|max:13|regex:/[0-9]/',
+            'nomor_hp' => 'required|regex:/^[0-9]{10,15}$/',
             'status' => 'required',
         ]);
         Dad::where('uri', $dad->uri)->update($validated);
@@ -79,17 +79,17 @@ class Admin extends Controller
 
     public function edit_mom(Request $request, Mom $mom){
         $validated = $request->validate([
-            'nama' => 'required|string',
-            'tempat_lahir' => 'required|string',
-            'tanggal_lahir' => 'required|string',
-            'agama' => 'required',
-            'kewarganegaraan' => 'required|string',
-            'pekerjaan' => 'required|string',
-            'pendidikan' => 'required',
-            'penghasilan' => 'nullable|numeric',
-            'alamat' => 'required|string|max:200',
-            'nomor_hp' => 'required|string|max:13|regex:/[0-9]/',
-            'status' => 'required',
+            'nama' => 'nullable|string',
+            'tempat_lahir' => 'nullable|string',
+            'tanggal_lahir' => 'nullable|string',
+            'agama' => 'nullable',
+            'kewarganegaraan' => 'nullable|string',
+            'pekerjaan'   => 'nullable|string',
+            'pendidikan'  => 'required|in:SD/Sederajat,SMP/Sederajat,SMA/Sederajat,Diploma,Strata-1,Strata-2,Strata-3',
+            'penghasilan' => 'nullable|numeric|min:0',
+            'alamat' => 'nullable|string|max:200',
+            'nomor_hp' => 'nullable|string|max:13|regex:/[0-9]/',
+            'status' => 'nullable',
         ]);
         Mom::where('uri', $mom->uri)->update($validated);
         return redirect('/dashboard')->with('success', 'Data ibu siswa berhasil diperbarui');
@@ -104,16 +104,16 @@ class Admin extends Controller
 
     public function edit_guardian(Request $request, Guardian $guardian){
         $validated = $request->validate([
-            'nama' => 'required|string',
-            'tempat_lahir' => 'required|string',
-            'tanggal_lahir' => 'required|string',
-            'agama' => 'required',
-            'kewarganegaraan' => 'required|string',
-            'pekerjaan' => 'required|string',
-            'pendidikan' => 'required',
-            'penghasilan' => 'required|numeric',
-            'alamat' => 'required|string|max:200',
-            'nomor_hp' => 'required|string|max:13|regex:/[0-9]/',
+            'nama' => 'nullable|string',
+            'tempat_lahir' => 'nullable|string',
+            'tanggal_lahir' => 'nullable|string',
+            'agama' => 'nullable',
+            'kewarganegaraan' => 'nullable|string',
+            'pekerjaan' => 'nullable|string',
+            'pendidikan'      => 'required|in:SD/Sederajat,SMP/Sederajat,SMA/Sederajat,Diploma,Strata-1,Strata-2,Strata-3',
+            'penghasilan' => 'nullable|numeric',
+            'alamat' => 'nullable|string|max:200',
+            'nomor_hp' => 'nullable|string|max:13|regex:/[0-9]/',
         ]);
         Guardian::where('uri', $guardian->uri)->update($validated);
         return redirect('/dashboard')->with('success', 'Data wali siswa berhasil diperbarui');
@@ -161,20 +161,42 @@ class Admin extends Controller
         ]);
     }
 
-    public function edit_mutasi(Request $request, User $siswa){
-        $validated = $request->validate([
-            'tujuan' => 'required|string|min:8',
-            'alasan' => 'required',
-            'tanggal_pindah' => 'required'
-        ]);
-        Mutation::updateOrCreate(
-            ['user_id' => $siswa->id],
-            $validated
-        );
+    public function delete_mutasi(Mutation $mutation)
+    {
+    // opsional: ubah status siswa jadi aktif lagi kalau mutasi dihapus
+    $mutation->user->update(['status' => 'siswa']); 
 
-        $siswa->biodata()->delete();
-        return redirect('/dashboard')->with('success', 'Siswa berhasil dimutasi');
+    // hapus mutasi dari database
+    $mutation->delete();
+
+    return redirect('/admin/siswa')->with('success', 'Data mutasi berhasil dihapus');
     }
+
+
+    public function edit_mutasi(Request $request, User $siswa){
+    $validated = $request->validate([
+        'tujuan' => 'required|string|min:8',
+        'alasan' => 'required',
+        'tanggal_pindah' => 'required'
+    ]);
+
+    // Simpan atau update mutasi siswa
+    Mutation::updateOrCreate(
+        ['user_id' => $siswa->id],
+        $validated
+    );
+
+    // Hapus biodata lama
+    $siswa->biodata()->delete();
+
+    // Ubah status siswa agar tidak masuk list aktif lagi
+    $siswa->update([
+        'status' => 'mutasi'
+    ]);
+
+    return redirect('/dashboard')->with('success', 'Siswa berhasil dimutasi');
+}
+
 
     public function list_mutasi(){
         return view('admin/info_siswa/list_mutasi', [
