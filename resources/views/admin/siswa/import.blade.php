@@ -20,8 +20,9 @@
             <ul class="mb-0 mt-2">
               <li>Unggah berkas <strong>CSV</strong> (dari Excel: <em>File &rarr; Save As &rarr; CSV</em>).</li>
               <li>Baris pertama harus berisi nama kolom:
-                <code>nama_lengkap,nisn,nis,jenis_kelamin,email,nama_kelas,tahun_ajaran</code>
+                <code>nama_lengkap;nisn;nis;jenis_kelamin;email;nama_kelas;tahun_ajaran</code>
               </li>
+              <li>Template memakai pemisah <strong>titik koma (;)</strong> agar terbaca rapi di Excel. Berkas dengan pemisah koma juga tetap didukung.</li>
               <li>Kolom <code>jenis_kelamin</code> diisi <strong>L</strong> atau <strong>P</strong>.</li>
               <li>Kelas dan tahun ajaran yang belum ada akan dibuat otomatis.</li>
               <li>Siswa dengan NISN/NIS yang sudah terdaftar akan <strong>dilewati</strong>.</li>

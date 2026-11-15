@@ -33,9 +33,11 @@ class SiswaImportController extends Controller
             ['Siti Aminah', '1234567891', '1235', 'P', '', '12 F3', '2025/2026'],
         ];
 
-        $out = '';
+        // Excel dengan locale Indonesia memakai titik koma sebagai pemisah kolom.
+        // BOM UTF-8 dipasang agar Excel membaca karakter Indonesia dengan benar.
+        $out = "\xEF\xBB\xBF";
         foreach ($rows as $r) {
-            $out .= implode(',', $r) . "\r\n";
+            $out .= implode(';', $r) . "\r\n";
         }
 
         return response($out, 200, [
@@ -71,17 +73,30 @@ class SiswaImportController extends Controller
             rewind($handle);
         }
 
-        $header = fgetcsv($handle);
-        if (!$header) {
+        // Baca semua baris lalu deteksi pemisah (koma atau titik koma).
+        // Excel berbahasa Indonesia menyimpan CSV memakai titik koma.
+        $semuaBaris = [];
+        while (($line = fgets($handle)) !== false) {
+            $line = rtrim($line, "\r\n");
+            if (trim($line) === '') {
+                continue;
+            }
+            $semuaBaris[] = $line;
+        }
+
+        if (!$semuaBaris) {
             fclose($handle);
             return back()->with('error', 'CSV kosong atau format tidak dikenali.');
         }
 
-        $header = array_map(function ($h) {
-            return strtolower(trim(str_replace("\xEF\xBB\xBF", '', $h)));
-        }, $header);
+        $headerLine = str_replace("\xEF\xBB\xBF", '', $semuaBaris[0]);
+        $pemisah    = (substr_count($headerLine, ';') > substr_count($headerLine, ',')) ? ';' : ',';
 
-        $wajib = ['nama_lengkap', 'nisn', 'nis', 'jenis_kelamin', 'nama_kelas', 'tahun_ajaran'];
+        $header = array_map(function ($h) {
+            return strtolower(trim($h, " \t\""));
+        }, str_getcsv($headerLine, $pemisah));
+
+        $wajib  = ['nama_lengkap', 'nisn', 'nis', 'jenis_kelamin', 'nama_kelas', 'tahun_ajaran'];
         $hilang = array_diff($wajib, $header);
         if ($hilang) {
             fclose($handle);
@@ -98,7 +113,8 @@ class SiswaImportController extends Controller
 
         DB::beginTransaction();
         try {
-            while (($data = fgetcsv($handle)) !== false) {
+            foreach (array_slice($semuaBaris, 1) as $line) {
+                $data = str_getcsv($line, $pemisah);
                 $baris++;
 
                 // Lewati baris kosong
