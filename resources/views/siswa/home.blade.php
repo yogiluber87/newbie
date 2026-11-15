@@ -11,7 +11,7 @@
         @endif
       <div class="row justify-content-center p-3">
         <div class="col-lg-3">
-          <img src="@if (auth()->user()->foto === NULL) @if(auth()->user()->jenis_kelamin === 'L') /images/male.png @else /images/female.png @endif @else {{asset('storage/'.auth()->user()->foto)}}  @endif" class="img-fluid rounded-start" alt="..." style="max-width: 220px">
+          <img src="@if (auth()->user()->foto === NULL) @if(auth()->user()->jenis_kelamin === 'L') /images/male.png @else /images/female.png @endif @else{{asset('storage/'.auth()->user()->foto)}}@endif" class="img-fluid rounded-start" alt="..." style="max-width: 220px">
         </div>
         <div class="col-lg-6 mt-3">
           <h1 class="text-uppercase">{{auth()->user()->nama_lengkap}}</h1>

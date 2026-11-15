@@ -7,6 +7,7 @@ use App\Models\Group;
 use App\Models\Year;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
@@ -52,14 +53,26 @@ class UserController extends Controller
             'nama_lengkap' => 'required|max:50',
             'nisn' => 'required|max:16|regex:/[0-9]/',
             'nis' => 'required|max:16|regex:/[0-9]/',
-            'group_id' => 'required',
-            'year_id' => 'required',
+            'group_id' => 'required|integer|exists:groups,id',
+            'year_id' => 'required|integer|exists:years,id',
             'jenis_kelamin' => 'required',
-            'email' => 'nullable|email:dns|unique:users,email',
+            'email' => 'nullable|email|unique:users,email',
             'foto' => 'nullable|image|file|max:1024',
         ]);
-        if($request->file('foto')){
-            $validated['foto'] = $request->file('foto')->store('foto-siswa');
+        unset($validated['foto']);
+        if($request->hasFile('foto') && $request->file('foto')->isValid()){
+            $file = $request->file('foto');
+            $src = $file->getRealPath() ?: $file->getPathname();
+            if($src && file_exists($src) && is_readable($src)){
+                try {
+                    $name = 'foto-siswa/'.\Illuminate\Support\Str::random(40).'.'.$file->getClientOriginalExtension();
+                    if(\Illuminate\Support\Facades\Storage::disk("public")->put($name, file_get_contents($src))){
+                        $validated['foto'] = $name;
+                    }
+                } catch (\Throwable $e) {
+                    \Log::warning('Upload foto gagal: '.$e->getMessage());
+                }
+            }
         }
         $validated['status'] = 'siswa';
         $validated['password'] = Hash::make('siswa123');
@@ -116,16 +129,28 @@ class UserController extends Controller
             'nisn' => 'required|max:16|regex:/[0-9]/',
             'nis' => 'required|max:16|regex:/[0-9]/',
             'jenis_kelamin' => 'required',
-            'group_id' => 'required',
-            'year_id' => 'required',
-            'email' => 'nullable|email:dns',
+            'group_id' => 'required|integer|exists:groups,id',
+            'year_id' => 'required|integer|exists:years,id',
+            'email' => 'nullable|email',
             'foto' => 'nullable|image|file|max:1024',
         ]);
-        if ($request->file('foto')) {
-            if($siswa->foto != null){
-                Storage::delete($siswa->foto);
+        unset($validated['foto']);
+        if ($request->hasFile('foto') && $request->file('foto')->isValid()) {
+            $file = $request->file('foto');
+            $src = $file->getRealPath() ?: $file->getPathname();
+            if ($src && file_exists($src) && is_readable($src)) {
+                if($siswa->foto != null){
+                    Storage::disk("public")->delete($siswa->foto);
+                }
+                try {
+                    $name = 'foto-siswa/'.\Illuminate\Support\Str::random(40).'.'.$file->getClientOriginalExtension();
+                    if(\Illuminate\Support\Facades\Storage::disk("public")->put($name, file_get_contents($src))){
+                        $validated['foto'] = $name;
+                    }
+                } catch (\Throwable $e) {
+                    \Log::warning('Upload foto gagal: '.$e->getMessage());
+                }
             }
-            $validated['foto'] = $request->file('foto')->store('foto-siswa');
         }
         
         $siswa->update($validated);
@@ -140,13 +165,18 @@ class UserController extends Controller
      */
     public function destroy(User $siswa)
     {
-        Storage::delete($siswa->foto);
-        $siswa->biodata()->delete();
-        $siswa->ayah()->delete();
-        $siswa->ibu()->delete();
-        $siswa->wali()->delete();
-        $siswa->mutasi()->delete();
-        $siswa->delete();
+        DB::transaction(function () use ($siswa) {
+            if ($siswa->foto) {
+                Storage::disk("public")->delete($siswa->foto);
+            }
+            $siswa->biodata()->delete();
+            $siswa->ayah()->delete();
+            $siswa->ibu()->delete();
+            $siswa->wali()->delete();
+            $siswa->mutasi()->delete();
+            $siswa->delete();
+        });
+
         return redirect('/admin/siswa')->with('success', 'Data siswa berhasil dihapus');
     }
 

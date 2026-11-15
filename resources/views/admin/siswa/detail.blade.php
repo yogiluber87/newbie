@@ -17,7 +17,7 @@
       </div>
       <div class="row mb-3">
         <div class="col-lg-3">
-          <img src="@if ($res->foto === NULL) @if($res->jenis_kelamin === 'L') /images/male.png @else /images/female.png @endif @else {{asset('storage/'.$res->foto)}}  @endif" class="img-fluid rounded-start" alt="..." style="max-width: 220px">
+          <img src="@if ($res->foto === NULL) @if($res->jenis_kelamin === 'L') /images/male.png @else /images/female.png @endif @else{{asset('storage/'.$res->foto)}}@endif" class="img-fluid rounded-start" alt="..." style="max-width: 220px">
         </div>
         <div class="col-lg-5" style="padding-top: 30px;">
           <h3 class="mb-3 text-uppercase">{{$res->nama_lengkap}}</h3>

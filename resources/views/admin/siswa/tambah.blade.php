@@ -56,12 +56,12 @@
             </div>
             <div class="mb-3">
               <label for="group_id" class="form-label">Kelas Siswa</label>
-              <input class="form-control @error('group_id') is-invalid @enderror" list="listKelas" name="group_id" placeholder="Ketik nama kelas...">
-              <datalist id="listKelas">
+              <select class="form-select @error('group_id') is-invalid @enderror" name="group_id">
+                <option value="" disabled {{ old('group_id') ? '' : 'selected' }}>-- Pilih Kelas --</option>
                 @foreach ($kelas as $item)
-                    <option value="{{$item->id}}">{{$item->nama}}</option>
+                    <option value="{{$item->id}}" {{ old('group_id') == $item->id ? 'selected' : '' }}>{{$item->nama}}</option>
                 @endforeach
-              </datalist>
+              </select>
               @error('group_id')
                   <div class="invalid-feedback">
                     {{$message}}
@@ -70,12 +70,12 @@
             </div>
             <div class="mb-3">
               <label for="year_id" class="form-label">Tahun Ajaran siswa Didaftarkan</label>
-              <input class="form-control @error('year_id') is-invalid @enderror" list="listTahun" name="year_id" placeholder="Ketik tahun ajaran...">
-              <datalist id="listTahun">
+              <select class="form-select @error('year_id') is-invalid @enderror" name="year_id">
+                <option value="" disabled {{ old('year_id') ? '' : 'selected' }}>-- Pilih Tahun Ajaran --</option>
                 @foreach ($tahun as $item)
-                    <option value="{{$item->id}}">{{$item->tahun_ajaran}}</option>
+                    <option value="{{$item->id}}" {{ old('year_id') == $item->id ? 'selected' : '' }}>{{$item->tahun_ajaran}}</option>
                 @endforeach
-              </datalist>
+              </select>
               @error('year_id')
                   <div class="invalid-feedback">
                     {{$message}}

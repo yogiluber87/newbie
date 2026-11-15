@@ -33,7 +33,7 @@
   </ul>
   <div class="dropdown fixed-bottom" style="bottom: 20px; left: 30px">
     <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
-      <img src="@if (auth()->user()->foto === NULL) @if(auth()->user()->jenis_kelamin === 'L') /images/male.png @else /images/female.png @endif @else {{asset('storage/'.auth()->user()->foto)}}  @endif" alt="" width="32" height="32" class="rounded-circle me-2">
+      <img src="@if (auth()->user()->foto === NULL) @if(auth()->user()->jenis_kelamin === 'L') /images/male.png @else /images/female.png @endif @else{{asset('storage/'.auth()->user()->foto)}}@endif" alt="" width="32" height="32" class="rounded-circle me-2">
       <strong>{{auth()->user()->nama_lengkap}}</strong>
     </a>
     <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
