@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('nisn')->unique();
             $table->string('nis')->unique();
             $table->string('status');
-            $table->string('email')->nullable()->unique()->change();
+            $table->string('email')->nullable()->unique();
             $table->string('password');
             $table->string('jenis_kelamin');
             $table->timestamps();
@@ -37,6 +37,5 @@ class CreateUsersTable extends Migration
     public function down()
     {
         Schema::dropIfExists('users');
-        $table->string('email')->unique()->change();
     }
 }

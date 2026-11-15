@@ -1,6 +1,18 @@
 @extends('layouts.base')
 
 @section('content')
+      @if (session()->has('success'))
+          <div class="alert alert-success alert-dismissible fade show" role="alert" style="z-index: 1">
+            <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+      @endif
+      @if (session()->has('error'))
+          <div class="alert alert-danger alert-dismissible fade show" role="alert" style="z-index: 1">
+            <i class="bi bi-exclamation-triangle me-2"></i>{{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+      @endif
     <div class="container card shadow mt-3 mb-3 p-3 w-100">
       <div class="row mb-3">
         <h3 class="text-center text-uppercase">{{$title}}</h3>

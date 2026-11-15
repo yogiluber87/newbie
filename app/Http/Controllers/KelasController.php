@@ -103,10 +103,13 @@ class KelasController extends Controller
      */
     public function destroy(Group $grup)
     {
-        foreach ($grup->siswa as $item) {
-            $item->update(['group_id' => NULL]);
+        $jumlahSiswa = $grup->siswa()->count();
+
+        if ($jumlahSiswa > 0) {
+            return redirect('/admin/grup')->with('error', "Kelas '{$grup->nama}' masih memiliki {$jumlahSiswa} siswa. Pindahkan siswa terlebih dahulu sebelum menghapus kelas.");
         }
+
         $grup->delete();
-        return redirect('/dashboard')->with('success', 'Kelas berhasil dihapus');
+        return redirect('/admin/grup')->with('success', 'Kelas berhasil dihapus');
     }
 }

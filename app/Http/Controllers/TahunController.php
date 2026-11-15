@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Year;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class TahunController extends Controller
@@ -113,7 +114,13 @@ class TahunController extends Controller
      */
     public function destroy(Year $tahun)
     {
+        $jumlahSiswa = User::where('year_id', $tahun->id)->count();
+
+        if ($jumlahSiswa > 0) {
+            return redirect('/admin/tahun')->with('error', "Tahun ajaran '{$tahun->tahun_ajaran}' masih digunakan oleh {$jumlahSiswa} siswa dan tidak dapat dihapus.");
+        }
+
         $tahun->delete();
-        return redirect('/dashboard')->with('success', 'tahun ajaran berhasil dihapus!');
+        return redirect('/admin/tahun')->with('success', 'tahun ajaran berhasil dihapus!');
     }
 }

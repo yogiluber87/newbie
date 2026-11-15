@@ -39,10 +39,20 @@ class Admin extends Controller
     }
 
     public function move_students(Request $request){
-        foreach ($request['daftar'] as $item) {
-            User::where('id', $item)->update(['group_id' => $request['group_id']]);
+        $validated = $request->validate([
+            'daftar'   => 'required|array|min:1',
+            'daftar.*' => 'exists:users,id',
+            'group_id' => 'required|exists:groups,id',
+        ], [
+            'daftar.required'   => 'Pilih minimal satu siswa yang akan dipindahkan.',
+            'group_id.required' => 'Pilih kelas tujuan terlebih dahulu.',
+            'group_id.exists'   => 'Kelas tujuan tidak ditemukan.',
+        ]);
+
+        foreach ($validated['daftar'] as $item) {
+            User::where('id', $item)->update(['group_id' => $validated['group_id']]);
         }
-        return redirect('/admin/grup');
+        return redirect('/admin/grup')->with('success', 'Kelas siswa berhasil diperbarui');
     }
 
     public function dad_form(Dad $dad){
