@@ -21,7 +21,7 @@
         </div>
         <div class="mb-3">
           <label for="nisn" class="form-label">Nomor Induk Siswa Nasional</label>
-          <input type="text" class="form-control @error('nisn') is-invalid @enderror" name="nisn" value="{{$res->nisn}}">
+          <input type="text" class="form-control @error('nisn') is-invalid @enderror" name="nisn" value="{{$res->nisn}}" autocomplete="off">
           @error('nisn')
               <div class="invalid-feedback">
                 {{$message}}
@@ -30,7 +30,8 @@
         </div>
         <div class="mb-3">
           <label for="nis" class="form-label">Nomor Induk Siswa</label>
-          <input type="text" class="form-control @error('nis') is-invalid @enderror" name="nis" value="{{$res->nis}}">
+          <input type="text" class="form-control @error('nis') is-invalid @enderror" name="nis" value="{{$res->nis}}" autocomplete="off">
+          <div class="form-text text-danger d-none" id="pesanNis"></div>
           @error('nis')
               <div class="invalid-feedback">
                 {{$message}}
@@ -59,7 +60,7 @@
           <label for="group_id" class="form-label">Kelas Siswa</label>
           <select class="form-select @error('group_id') is-invalid @enderror" name='group_id'>
             @foreach ($kelas as $item)
-                <option value="{{$item->id}}" @if ($res->group_id === $item->id) selected @endif>{{$item->nama}}</option>
+                <option value="{{$item->id}}" @if ((int) $res->group_id === (int) $item->id) selected @endif>{{$item->nama}}</option>
             @endforeach
           </select>
           @error('group_id')
@@ -72,7 +73,7 @@
           <label for="year_id" class="form-label">Tahun Ajaran siswa Didaftarkan</label>
           <select class="form-select @error('year_id') is-invalid @enderror" name='year_id'>
             @foreach ($tahun as $item)
-                <option value="{{$item->id}}" @if ($res->year_id === $item->id) selected @endif>{{$item->tahun_ajaran}}</option>
+                <option value="{{$item->id}}" @if ((int) $res->year_id === (int) $item->id) selected @endif>{{$item->tahun_ajaran}}</option>
             @endforeach
           </select>
           @error('year_id')
@@ -105,4 +106,55 @@
     </div>
   </div>
 </div>    
+
+<script>
+(function () {
+    var token    = document.querySelector('input[name="_token"]').value;
+    var abaikan  = {{ $res->id }};
+    var inputNisn = document.querySelector('input[name="nisn"]');
+    var inputNis  = document.querySelector('input[name="nis"]');
+    var kotakNisn = document.createElement('div');
+    kotakNisn.className = 'form-text text-danger d-none';
+    if (inputNisn) inputNisn.insertAdjacentElement('afterend', kotakNisn);
+    var kotakNis = document.getElementById('pesanNis');
+
+    function tampilkan(el, kotak, pesan) {
+        if (pesan) {
+            kotak.textContent = pesan;
+            kotak.classList.remove('d-none');
+            el.classList.add('is-invalid');
+        } else {
+            kotak.textContent = '';
+            kotak.classList.add('d-none');
+            el.classList.remove('is-invalid');
+        }
+    }
+
+    function cekDuplikat(el) {
+        var nisn = inputNisn.value.trim();
+        var nis  = inputNis.value.trim();
+        fetch('/admin/siswa/cek-duplikat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': token,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ nisn: nisn, nis: nis, abaikan: abaikan })
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            if (el === inputNisn) {
+                tampilkan(inputNisn, kotakNisn, data.nisn_dipakai ? 'NISN ini sudah dipakai siswa lain.' : '');
+            } else {
+                tampilkan(inputNis, kotakNis, data.nis_dipakai ? 'NIS ini sudah dipakai siswa lain.' : '');
+            }
+        })
+        .catch(function () {});
+    }
+
+    if (inputNisn) inputNisn.addEventListener('blur', function () { cekDuplikat(inputNisn); });
+    if (inputNis)  inputNis.addEventListener('blur', function () { cekDuplikat(inputNis); });
+})();
+</script>
 @endsection

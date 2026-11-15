@@ -20,21 +20,23 @@
             </div>
             <div class="mb-3">
               <label for="nisn" class="form-label">Nomor Induk Siswa Nasional</label>
-              <input type="text" class="form-control @error('nisn') is-invalid @enderror" name="nisn">
+              <input type="text" class="form-control @error('nisn') is-invalid @enderror" name="nisn" autocomplete="off">
               @error('nisn')
                   <div class="invalid-feedback">
                     {{$message}}
                   </div>
               @enderror
+              <div class="form-text text-danger d-none" id="pesanNisn"></div>
             </div>
             <div class="mb-3">
               <label for="nis" class="form-label">Nomor Induk Siswa</label>
-              <input type="text" class="form-control @error('nis') is-invalid @enderror" name="nis">
+              <input type="text" class="form-control @error('nis') is-invalid @enderror" name="nis" autocomplete="off">
               @error('nis')
                   <div class="invalid-feedback">
                     {{$message}}
                   </div>
               @enderror
+              <div class="form-text text-danger d-none" id="pesanNis"></div>
             </div>
             <div class="mb-3">
               <label for="email" class="form-label">Alamat Email Siswa (Gmail)</label>
@@ -106,4 +108,53 @@
         </div>
       </div>
     </div>
+
+    <script>
+    (function () {
+        var token = document.querySelector('input[name="_token"]').value;
+        var inputNisn = document.querySelector('input[name="nisn"]');
+        var inputNis  = document.querySelector('input[name="nis"]');
+
+        function tampilkan(el, pesan) {
+            var kotak = document.getElementById(el === inputNisn ? 'pesanNisn' : 'pesanNis');
+            if (pesan) {
+                kotak.textContent = pesan;
+                kotak.classList.remove('d-none');
+                el.classList.add('is-invalid');
+            } else {
+                kotak.textContent = '';
+                kotak.classList.add('d-none');
+                el.classList.remove('is-invalid');
+            }
+        }
+
+        function cekDuplikat(el) {
+            var nisn = inputNisn.value.trim();
+            var nis  = inputNis.value.trim();
+            if (!nisn && !nis) return;
+
+            fetch('/admin/siswa/cek-duplikat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': token,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ nisn: nisn, nis: nis })
+            })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (el === inputNisn) {
+                    tampilkan(inputNisn, data.nisn_dipakai ? 'NISN ini sudah terdaftar. Gunakan NISN lain.' : '');
+                } else {
+                    tampilkan(inputNis, data.nis_dipakai ? 'NIS ini sudah terdaftar. Gunakan NIS lain.' : '');
+                }
+            })
+            .catch(function () { /* diamkan bila gagal */ });
+        }
+
+        if (inputNisn) inputNisn.addEventListener('blur', function () { cekDuplikat(inputNisn); });
+        if (inputNis)  inputNis.addEventListener('blur', function () { cekDuplikat(inputNis); });
+    })();
+    </script>
 @endsection

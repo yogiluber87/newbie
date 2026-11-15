@@ -120,6 +120,35 @@ class UserController extends Controller
     }
 
     /**
+     * Cek ketersediaan NISN dan NIS secara langsung (AJAX).
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function cekDuplikat(Request $request)
+    {
+        $nisn  = trim((string) $request->input('nisn'));
+        $nis   = trim((string) $request->input('nis'));
+        $abaikan = $request->input('abaikan');
+
+        $cek = function ($kolom, $nilai) use ($abaikan) {
+            if ($nilai === '') {
+                return false;
+            }
+            $q = User::where($kolom, $nilai);
+            if ($abaikan) {
+                $q->where('id', '!=', $abaikan);
+            }
+            return $q->exists();
+        };
+
+        return response()->json([
+            'nisn_dipakai' => $cek('nisn', $nisn),
+            'nis_dipakai'  => $cek('nis', $nis),
+        ]);
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request

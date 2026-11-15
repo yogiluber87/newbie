@@ -41,6 +41,7 @@ Route::put('/password/{user}', [Siswa::class, 'change_password'])->middleware('a
 // Admin Exclusive Routes
 Route::get('/dashboard', [Admin::class, 'index'])->middleware('admin');
 Route::post('/pindah', [Admin::class, 'move_students'])->middleware('admin');
+Route::post('/admin/siswa/cek-duplikat', [UserController::class, 'cekDuplikat'])->middleware('admin');
 Route::get('/admin/siswa/import', [SiswaImportController::class, 'form'])->middleware('admin');
 Route::post('/admin/siswa/import', [SiswaImportController::class, 'store'])->middleware('admin');
 Route::get('/admin/siswa/import/template', [SiswaImportController::class, 'template'])->middleware('admin');
