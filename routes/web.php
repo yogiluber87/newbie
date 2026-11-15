@@ -1,5 +1,4 @@
 <?php
-use App\Models\Student;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Authorization;
 use App\Http\Controllers\Siswa;
@@ -8,6 +7,7 @@ use App\Http\Controllers\Printer;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\TahunController;
+use App\Http\Controllers\SiswaImportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +41,9 @@ Route::put('/password/{user}', [Siswa::class, 'change_password'])->middleware('a
 // Admin Exclusive Routes
 Route::get('/dashboard', [Admin::class, 'index'])->middleware('admin');
 Route::post('/pindah', [Admin::class, 'move_students'])->middleware('admin');
+Route::get('/admin/siswa/import', [SiswaImportController::class, 'form'])->middleware('admin');
+Route::post('/admin/siswa/import', [SiswaImportController::class, 'store'])->middleware('admin');
+Route::get('/admin/siswa/import/template', [SiswaImportController::class, 'template'])->middleware('admin');
 Route::resource('/admin/siswa', UserController::class)->middleware('admin');
 Route::resource('/admin/grup', KelasController::class)->middleware('admin');
 Route::resource('/admin/tahun', TahunController::class)->middleware('admin');
@@ -61,8 +64,5 @@ Route::get('admin/print/{siswa}', [Printer::class, 'data_siswa'])->middleware('a
 
 // // tampil semua mutasi
 // Route::get('/admin/mutasi', [AdminController::class, 'index']);
-
-// hapus mutasi by NISN
-Route::delete('/admin/mutasi/{nisn}', [AdminController::class, 'destroy']);
 
 

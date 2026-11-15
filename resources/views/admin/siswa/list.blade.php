@@ -18,6 +18,7 @@
         </div>
         <div class="col-lg-2">
           <a href="/admin/print" class="btn btn-warning"><i class="bi bi-printer me-2"></i>Cetak</a>
+          <a href="/admin/siswa/import" class="btn btn-success"><i class="bi bi-upload me-2"></i>Impor CSV</a>
         </div>
       </div>
       @if (session()->has('success'))
@@ -25,6 +26,34 @@
             <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
+      @endif
+      @if (session()->has('import_detail'))
+          @php
+            $punyaMasalah = collect(session('import_detail'))->whereIn('status', ['dilewati', 'gagal']);
+          @endphp
+          @if ($punyaMasalah->count())
+          <div class="alert alert-warning alert-dismissible fade show" role="alert" style="z-index: 1">
+            <strong><i class="bi bi-exclamation-triangle me-2"></i>Baris yang tidak diimpor ({{ $punyaMasalah->count() }})</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <div class="table-responsive mt-2" style="max-height: 220px; overflow-y: auto;">
+              <table class="table table-sm table-bordered mb-0 bg-white">
+                <thead>
+                  <tr><th>Baris</th><th>Nama</th><th>Status</th><th>Keterangan</th></tr>
+                </thead>
+                <tbody>
+                  @foreach ($punyaMasalah as $d)
+                    <tr>
+                      <td>{{ $d['baris'] }}</td>
+                      <td>{{ $d['nama'] }}</td>
+                      <td>{{ ucfirst($d['status']) }}</td>
+                      <td>{{ $d['pesan'] }}</td>
+                    </tr>
+                  @endforeach
+                </tbody>
+              </table>
+            </div>
+          </div>
+          @endif
       @endif
       @if($res->count())
       <div class="row justify-content-center">
