@@ -51,13 +51,18 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'nama_lengkap' => 'required|max:50',
-            'nisn' => 'required|max:16|regex:/[0-9]/',
-            'nis' => 'required|max:16|regex:/[0-9]/',
+            'nisn' => 'required|max:16|regex:/[0-9]/|unique:users,nisn',
+            'nis' => 'required|max:16|regex:/[0-9]/|unique:users,nis',
             'group_id' => 'required|integer|exists:groups,id',
             'year_id' => 'required|integer|exists:years,id',
             'jenis_kelamin' => 'required',
             'email' => 'nullable|email|unique:users,email',
             'foto' => 'nullable|image|file|max:1024',
+        ], [
+            'nisn.unique' => 'NISN ini sudah terdaftar. Gunakan NISN lain.',
+            'nis.unique'  => 'NIS ini sudah terdaftar. Gunakan NIS lain.',
+            'nisn.regex'  => 'NISN hanya boleh berisi angka.',
+            'nis.regex'   => 'NIS hanya boleh berisi angka.',
         ]);
         unset($validated['foto']);
         if($request->hasFile('foto') && $request->file('foto')->isValid()){
@@ -84,7 +89,6 @@ class UserController extends Controller
         $wali = $user->wali()->create(['uri' => Str::random(40)]);
         return redirect('/dashboard')->with('success', 'Siswa Berhasil Ditambahkan');
     }
-
     /**
      * Display the specified resource.
      *
@@ -126,13 +130,19 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'nama_lengkap' => 'required|max:50',
-            'nisn' => 'required|max:16|regex:/[0-9]/',
-            'nis' => 'required|max:16|regex:/[0-9]/',
+            'nisn' => 'required|max:16|regex:/[0-9]/|unique:users,nisn,'.$siswa->id,
+            'nis' => 'required|max:16|regex:/[0-9]/|unique:users,nis,'.$siswa->id,
             'jenis_kelamin' => 'required',
             'group_id' => 'required|integer|exists:groups,id',
             'year_id' => 'required|integer|exists:years,id',
-            'email' => 'nullable|email',
+            'email' => 'nullable|email|unique:users,email,'.$siswa->id,
             'foto' => 'nullable|image|file|max:1024',
+        ], [
+            'nisn.unique' => 'NISN ini sudah terdaftar. Gunakan NISN lain.',
+            'nis.unique'  => 'NIS ini sudah terdaftar. Gunakan NIS lain.',
+            'email.unique' => 'Email ini sudah terdaftar.',
+            'nisn.regex'  => 'NISN hanya boleh berisi angka.',
+            'nis.regex'   => 'NIS hanya boleh berisi angka.',
         ]);
         unset($validated['foto']);
         if ($request->hasFile('foto') && $request->file('foto')->isValid()) {
