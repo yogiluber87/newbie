@@ -43,6 +43,12 @@ class SiswaDataController extends Controller
     private const KOLOM_JAGA_NOL = ['nisn', 'nis', 'nomor_hp'];
 
     /**
+     * Kolom berisi tanggal. Ditulis sebagai teks (="dd/mm/yyyy") supaya Excel
+     * menampilkannya sebagai tanggal yang terbaca, bukan angka serial (39598).
+     */
+    private const KOLOM_TANGGAL = ['tanggal_lahir'];
+
+    /**
      * Kolom identitas siswa untuk berkas CSV.
      */
     public const KOLOM_IDENTITAS = [
@@ -86,9 +92,19 @@ class SiswaDataController extends Controller
     public function exportPilihan(Request $request)
     {
         $request->validate([
-            'nisn'   => 'required_without:cari|array',
+            'nisn'   => 'required_without_all:cari,tempat_tinggal,nis,group_id,year_id,jenis_kelamin,status_mutasi,mutasi_dari,mutasi_sampai,penghasilan_min,penghasilan_max|array',
             'nisn.*' => 'string',
             'cari'   => 'nullable|string|max:100',
+            'nis'    => 'nullable|string|max:100',
+            'tempat_tinggal' => 'nullable|string|max:100',
+            'group_id' => 'nullable|integer',
+            'year_id'  => 'nullable|integer',
+            'penghasilan_min' => 'nullable|numeric',
+            'penghasilan_max' => 'nullable|numeric',
+            'jenis_kelamin' => 'nullable|in:L,P',
+            'status_mutasi' => 'nullable|in:sudah,belum',
+            'mutasi_dari' => 'nullable|date',
+            'mutasi_sampai' => 'nullable|date',
         ], [], [
             'nisn' => 'pilihan siswa',
             'cari' => 'kata kunci',
@@ -115,16 +131,15 @@ class SiswaDataController extends Controller
     }
 
     /**
-     * Query daftar siswa; ikut filter kata kunci bila ada (sama dengan halaman Daftar Siswa).
+     * Query daftar siswa; ikut semua filter halaman Daftar Siswa bila ada.
      */
     private function querySiswa(Request $request)
     {
-        $query = User::where('status', 'siswa')
-            ->with(['biodata', 'ayah', 'ibu', 'wali', 'kelas', 'tahun_ajar']);
+        $filters = User::filtersDari($request->all());
 
-        if ($request->filled('cari')) {
-            $query->filter(['cari' => $request->input('cari')]);
-        }
+        $query = User::query()
+            ->daftarSiswa($filters)
+            ->with(['biodata', 'ayah', 'ibu', 'wali', 'kelas', 'tahun_ajar']);
 
         return $query->orderBy('nama_lengkap');
     }
@@ -172,7 +187,11 @@ class SiswaDataController extends Controller
             // Mutasi bisa lebih dari satu, digabung dengan pemisah " | "
             $baris[] = $this->nilaiCsv(collect($arsip['mutasi'])->pluck('tujuan')->filter()->implode(' | '));
             $baris[] = $this->nilaiCsv(collect($arsip['mutasi'])->pluck('alasan')->filter()->implode(' | '));
-            $baris[] = $this->nilaiCsv(collect($arsip['mutasi'])->pluck('tanggal_pindah')->filter()->implode(' | '));
+            $baris[] = $this->nilaiCsv(collect($arsip['mutasi'])->pluck('tanggal_pindah')->filter()
+                ->map(function ($tanggal) {
+                    return $this->tanggalTampil((string) $tanggal);
+                })
+                ->implode(' | '));
 
             fputcsv($handle, $baris, ';', '"', '\\');
         }
@@ -210,6 +229,12 @@ class SiswaDataController extends Controller
 
         $teks = (string) $nilai;
 
+        // Tanggal: tampilkan dd/mm/yyyy dan kunci sebagai teks agar Excel tidak
+        // mengubahnya menjadi angka serial (mis. 2008-05-30 -> 39598).
+        if ($teks !== '' && in_array($kolom, self::KOLOM_TANGGAL, true)) {
+            return '="' . $this->tanggalTampil($teks) . '"';
+        }
+
         // NISN, NIS, dan nomor HP: tulis sebagai teks Excel agar nol di depan tidak hilang
         // saat berkas dibuka/diubah di Excel (="0120568897").
         if ($teks !== '' && in_array($kolom, self::KOLOM_JAGA_NOL, true) && preg_match('/^[0-9+]+$/', $teks)) {
@@ -217,6 +242,21 @@ class SiswaDataController extends Controller
         }
 
         return $teks;
+    }
+
+    /**
+     * Ubah tanggal dari database (Y-m-d) menjadi dd/mm/yyyy untuk dibaca manusia.
+     * Nilai yang bukan tanggal dikembalikan apa adanya.
+     */
+    private function tanggalTampil(string $nilai): string
+    {
+        $nilai = trim($nilai);
+
+        try {
+            return \Illuminate\Support\Carbon::parse($nilai)->format('d/m/Y');
+        } catch (\Throwable $e) {
+            return $nilai;
+        }
     }
 
     /**

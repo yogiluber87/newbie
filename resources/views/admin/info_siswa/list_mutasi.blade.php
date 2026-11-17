@@ -27,7 +27,7 @@
                       <!-- <td><a href="/admin/mutasi/{{$key->nisn}}" class="text-decoration-none">Hapus</a></td> -->
 
                       <td>
-  <form action="{{ url('/admin/mutasi/' . $key->id) }}" method="post" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+  <form action="{{ url('/admin/mutasi/' . $item->id) }}" method="post" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
     @csrf
     @method('delete')
     <button type="submit" class="btn btn-link text-decoration-none text-danger p-0">Hapus</button>

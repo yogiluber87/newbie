@@ -24,7 +24,7 @@
           <td>{{optional($res->biodata)->alamat}}</td>
         </tr>
         <tr>
-          <td style="width:350px;">Kota</td>
+          <td style="width:350px;">Kabupaten/Kota</td>
           <td>:</td>
           <td>{{optional($res->biodata)->kota}}</td>
         </tr>
@@ -139,7 +139,7 @@
           <td>{{optional($res->ayah)->alamat}}</td>
         </tr>
         <tr>
-          <td style="width:350px;">Kota Kelahiran Ayah</td>
+          <td style="width:350px;">Kabupaten/Kota Kelahiran Ayah</td>
           <td>:</td>
           <td>{{optional($res->ayah)->tempat_lahir}}</td>
         </tr>
@@ -194,7 +194,7 @@
           <td>{{optional($res->ibu)->alamat}}</td>
         </tr>
         <tr>
-          <td style="width:350px;">Kota Kelahiran ibu</td>
+          <td style="width:350px;">Kabupaten/Kota Kelahiran Ibu</td>
           <td>:</td>
           <td>{{optional($res->ibu)->tempat_lahir}}</td>
         </tr>

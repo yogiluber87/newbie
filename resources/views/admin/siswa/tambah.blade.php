@@ -102,7 +102,11 @@
             </div>
             <div class="d-grip gap-2 mb-3 w-100">
               <p class="fw-light"><span class="text-danger fw-bold">*</span> pastikan data yang kamu masukkan benar dan sesuai ketentuan</p>
-              <button type="submit" class="btn btn-primary w-100"><i class="bi bi-cloud-check me-2"></i> Simpan</button>
+              <p class="small text-muted mb-2">
+                Setelah data siswa disimpan, pengisian otomatis lanjut ke <strong>data ayah</strong>, lalu <strong>ibu</strong>,
+                <strong>biodata</strong>, dan <strong>wali</strong>. Langkah tersebut boleh dilewati dan bisa dilengkapi kapan saja.
+              </p>
+              <button type="submit" class="btn btn-primary w-100"><i class="bi bi-cloud-check me-2"></i> Simpan & Lanjut Isi Data Ayah</button>
             </div>
           </form>
         </div>

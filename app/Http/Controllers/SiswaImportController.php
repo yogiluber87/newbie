@@ -489,6 +489,12 @@ class SiswaImportController extends Controller
                             continue;
                         }
 
+                        // Tanggal disimpan sebagai Y-m-d, apa pun format di berkas
+                        if ($kolom === 'tanggal_lahir') {
+                            $nilai[$kolom] = $this->keTanggal($isi);
+                            continue;
+                        }
+
                         $nilai[$kolom] = $isi === '' ? null : $isi;
                     }
 
@@ -524,11 +530,7 @@ class SiswaImportController extends Controller
                         }
 
                         if (!empty($nilai['tanggal_pindah'])) {
-                            try {
-                                $nilai['tanggal_pindah'] = \Illuminate\Support\Carbon::parse($nilai['tanggal_pindah'])->format('Y-m-d');
-                            } catch (\Throwable $e) {
-                                $nilai['tanggal_pindah'] = null;
-                            }
+                            $nilai['tanggal_pindah'] = $this->keTanggal($nilai['tanggal_pindah']);
                         }
 
                         $siswa->mutasi()->create($nilai);
@@ -598,6 +600,59 @@ class SiswaImportController extends Controller
         }
 
         return $judul;
+    }
+
+    /**
+     * Ubah isi sel tanggal menjadi format database (Y-m-d).
+     *
+     * Menerima dd/mm/yyyy (format ekspor aplikasi), yyyy-mm-dd, dan angka
+     * serial Excel (mis. 39598) yang biasa muncul bila berkas dibuka di Excel.
+     */
+    private function keTanggal($nilai): ?string
+    {
+        $nilai = trim((string) $nilai);
+
+        if ($nilai === '') {
+            return null;
+        }
+
+        // Angka serial Excel: 1 = 1900-01-01, patokannya 1899-12-30
+        if (preg_match('/^[0-9]{5}$/', $nilai) && (int) $nilai > 20000) {
+            return \Illuminate\Support\Carbon::create(1899, 12, 30)
+                ->addDays((int) $nilai)
+                ->format('Y-m-d');
+        }
+
+        // Urutan penting: tahun di depan (ISO) diperiksa lebih dulu supaya
+        // "2008-05-30" tidak dibaca sebagai 30 Mei atau 8 Mei.
+        $pola = [
+            '/^\d{4}-\d{1,2}-\d{1,2}$/' => 'Y-m-d',
+            '/^\d{4}\/\d{1,2}\/\d{1,2}$/' => 'Y/m/d',
+            '/^\d{1,2}\/\d{1,2}\/\d{4}$/' => 'd/m/Y',
+            '/^\d{1,2}-\d{1,2}-\d{4}$/' => 'd-m-Y',
+            '/^\d{1,2}\/\d{1,2}\/\d{2}$/' => 'd/m/y',
+            '/^\d{1,2}-\d{1,2}-\d{2}$/' => 'd-m-y',
+        ];
+
+        foreach ($pola as $regex => $format) {
+            if (!preg_match($regex, $nilai)) {
+                continue;
+            }
+
+            $tanggal = \DateTime::createFromFormat('!' . $format, $nilai);
+            $galat = \DateTime::getLastErrors();
+
+            $sah = $tanggal instanceof \DateTime
+                && ($galat === false || ($galat['warning_count'] === 0 && $galat['error_count'] === 0));
+
+            if ($sah) {
+                return $tanggal->format('Y-m-d');
+            }
+
+            return null; // polanya cocok tapi tanggalnya tidak ada (mis. 31/02/2008)
+        }
+
+        return null;
     }
 
     /**

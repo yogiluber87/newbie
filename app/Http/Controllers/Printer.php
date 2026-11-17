@@ -14,6 +14,13 @@ class Printer extends Controller
     }
 
     public function data_siswa(User $siswa){
+        // Rute ini hanya memakai middleware auth: siswa boleh mencetak datanya
+        // sendiri, admin boleh mencetak semua. Selain itu ditolak.
+        $pengguna = auth()->user();
+        $admin = $pengguna && $pengguna->status !== 'siswa';
+
+        abort_unless($admin || (int) $pengguna?->id === (int) $siswa->id, 403, 'Anda tidak berhak mencetak data siswa ini.');
+
         $siswa->load(['biodata', 'ayah', 'ibu', 'wali', 'kelas', 'tahun_ajar']);
 
         $pdf = PDF::loadView('printout/buku_induk_siswa', ['res' => $siswa]);
@@ -58,23 +65,32 @@ class Printer extends Controller
      */
     public function buku_induk_pilihan(Request $request){
         $request->validate([
-            'nisn'   => 'required_without:cari|array',
+            'nisn'   => 'required_without_all:cari,tempat_tinggal,nis,group_id,year_id,jenis_kelamin,status_mutasi,mutasi_dari,mutasi_sampai,penghasilan_min,penghasilan_max|array',
             'nisn.*' => 'string',
             'cari'   => 'nullable|string|max:100',
+            'nis'    => 'nullable|string|max:100',
+            'tempat_tinggal' => 'nullable|string|max:100',
+            'group_id' => 'nullable|integer',
+            'year_id'  => 'nullable|integer',
+            'penghasilan_min' => 'nullable|numeric',
+            'penghasilan_max' => 'nullable|numeric',
+            'jenis_kelamin' => 'nullable|in:L,P',
+            'status_mutasi' => 'nullable|in:sudah,belum',
+            'mutasi_dari' => 'nullable|date',
+            'mutasi_sampai' => 'nullable|date',
         ], [], [
             'nisn' => 'pilihan siswa',
             'cari' => 'kata kunci',
         ]);
 
-        $query = User::where('status', 'siswa')
+        $filters = User::filtersDari($request->all());
+
+        $query = User::query()
+            ->daftarSiswa($filters)
             ->with(['biodata', 'ayah', 'ibu', 'wali', 'kelas', 'tahun_ajar']);
 
         if ($request->filled('nisn')) {
             $query->whereIn('nisn', $request->nisn);
-        }
-
-        if ($request->filled('cari')) {
-            $query->filter(['cari' => $request->input('cari')]);
         }
 
         $res = $query->orderBy('nama_lengkap')->get();

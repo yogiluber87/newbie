@@ -7,6 +7,9 @@
           <h3 class="text-uppercase fw-bold text-center">{{ $title }}</h3>
         </div>
       </div>
+      @if (($lanjut ?? false) && !empty($siswa))
+        @include('admin.info_siswa._langkah', ['siswa' => $siswa, 'langkah' => 'ayah'])
+      @endif
       <form action="/admin/ayah/{{ $res->uri }}" method="post" class="mx-3 my-3">
         @method('put')
         @csrf
@@ -20,8 +23,8 @@
               @enderror
             </div>
             <div class="mb-3">
-              <label for="tempat_lahir" class="form-label">Kota Kelahiran</label>
-              <input type="text" class="form-control @error('tempat_lahir') is-invalid @enderror" name="tempat_lahir" value="{{ $res->tempat_lahir }}" placeholder="Contoh: Denpasar">
+              <label for="tempat_lahir" class="form-label">Kabupaten/Kota Kelahiran</label>
+              <input type="text" class="form-control @error('tempat_lahir') is-invalid @enderror" name="tempat_lahir" value="{{ $res->tempat_lahir }}" placeholder="Contoh : Kab. Tanah Datar">
               @error('tempat_lahir')
                 <div class="invalid-feedback">{{ $message }}</div>                   
               @enderror
@@ -110,17 +113,18 @@
             </div>
           </div>
         </div>
-        <div class="d-grid gap-2 mb-3 w-100">
-  <p class="fw-light">
-    <span class="text-danger fw-bold">*</span> pastikan data yang kamu masukkan benar dan sesuai ketentuan
-  </p>
-  <button type="submit" class="btn btn-primary w-100">
-    <i class="bi bi-cloud-check me-2"></i> Simpan
-  </button>
-  <a href="{{ url('/admin/siswa/' . $res->user->nisn) }}" class="btn btn-secondary w-100">
-    <i class="bi bi-arrow-left-circle me-2"></i> Kembali ke Data Siswa
-  </a>
-</div>
+        @if (!empty($siswa))
+  @include('admin.info_siswa._tombol', ['siswa' => $siswa, 'langkah' => 'ayah', 'lanjut' => $lanjut ?? false])
+@else
+  <div class="d-grid gap-2 mb-3 w-100">
+    <p class="fw-light">
+      <span class="text-danger fw-bold">*</span> pastikan data yang kamu masukkan benar dan sesuai ketentuan
+    </p>
+    <button type="submit" class="btn btn-primary w-100">
+      <i class="bi bi-cloud-check me-2"></i> Simpan
+    </button>
+  </div>
+@endif
       </form>
     </div>
 @endsection

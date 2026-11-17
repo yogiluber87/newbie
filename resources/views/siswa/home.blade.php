@@ -17,7 +17,7 @@
           <h1 class="text-uppercase">{{auth()->user()->nama_lengkap}}</h1>
           <h4 class="fw-normal">NISN : <span class="text-primary">{{auth()->user()->nisn}}</span></h4>
           <h4 class="fw-normal">NIS : <span class="text-primary">{{auth()->user()->nis}}</span></h4>
-          <p class="sub-title">Diterima pada tahun ajaran {{auth()->user()->tahun_ajar->tahun_ajaran}}</p>
+          <p class="sub-title">Diterima pada tahun ajaran {{ optional(auth()->user()->tahun_ajar)->tahun_ajaran ?? '-' }}</p>
           @if (auth()->user()->kelas)
             <p class="sub-title">Kelas : {{auth()->user()->kelas->nama}}</p>
           @endif
@@ -31,7 +31,7 @@
           <table class="table">
             <tr>
               <th>Tempat/Tanggal Lahir</th>
-              <td>{{auth()->user()->biodata->tempat_lahir}}/{{auth()->user()->biodata->tanggal_lahir}}</td>
+              <td>{{optional(auth()->user()->biodata)->tempat_lahir}}/{{optional(auth()->user()->biodata)->tanggal_lahir}}</td>
             </tr>
             <tr>
               <th>Jenis Kelamin</th>
@@ -39,23 +39,23 @@
             </tr>
             <tr>
               <th>Alamat</th>
-              <td>{{auth()->user()->biodata->alamat}}</td>
+              <td>{{optional(auth()->user()->biodata)->alamat}}</td>
             </tr>
             <tr>
               <th>Kecamatan</th>
-              <td>{{auth()->user()->biodata->kecamatan}}</td>
+              <td>{{optional(auth()->user()->biodata)->kecamatan}}</td>
             </tr>
             <tr>
               <th>Jumlah Saudara Kandung</th>
-              <td>{{auth()->user()->biodata->jlh_saudara}}</td>
+              <td>{{optional(auth()->user()->biodata)->jlh_saudara}}</td>
             </tr>
             <tr>
               <th>Jumlah Saudara Tiri</th>
-              <td>{{auth()->user()->biodata->saudara_tiri}}</td>
+              <td>{{optional(auth()->user()->biodata)->saudara_tiri}}</td>
             </tr>
             <tr>
               <th>Jumlah Saudara Angkat</th>
-              <td>{{auth()->user()->biodata->saudara_angkat}}</td>
+              <td>{{optional(auth()->user()->biodata)->saudara_angkat}}</td>
             </tr>
           </table>
         </div>
@@ -63,31 +63,31 @@
           <table class="table">
             <tr>
               <th>Bahasa sehari-hari</th>
-              <td>{{auth()->user()->biodata->bahasa}}</td>
+              <td>{{optional(auth()->user()->biodata)->bahasa}}</td>
             </tr>
             <tr>
               <th>Agama</th>
-              <td>{{auth()->user()->biodata->agama}}</td>
+              <td>{{optional(auth()->user()->biodata)->agama}}</td>
             </tr>
             <tr>
               <th>Jarak ke sekolah</th>
-              <td>{{auth()->user()->biodata->jarak.' Km'}}</td>
+              <td>{{ optional(auth()->user()->biodata)->jarak ? optional(auth()->user()->biodata)->jarak . ' Km' : '-' }}</td>
             </tr>
             <tr>
               <th>Nomor Telefon</th>
-              <td>{{auth()->user()->biodata->nomor_hp}}</td>
+              <td>{{optional(auth()->user()->biodata)->nomor_hp}}</td>
             </tr>
             <tr>
               <th>Golongan Darah</th>
-              <td>{{auth()->user()->biodata->goldar}}</td>
+              <td>{{optional(auth()->user()->biodata)->goldar}}</td>
             </tr>
             <tr>
               <th>Tinggi badan</th>
-              <td>{{auth()->user()->biodata->tinggi.' Cm'}}</td>
+              <td>{{optional(auth()->user()->biodata)->tinggi.' Cm'}}</td>
             </tr>
             <tr>
               <th>Berat badan</th>
-              <td>{{auth()->user()->biodata->berat.' Kg'}}</td>
+              <td>{{optional(auth()->user()->biodata)->berat.' Kg'}}</td>
             </tr>
           </table>
         </div>
@@ -95,31 +95,31 @@
           <table class="table">
             <tr>
               <th>Riwayat Penyakit</th>
-              <td>{{auth()->user()->biodata->penyakit}}</td>
+              <td>{{optional(auth()->user()->biodata)->penyakit}}</td>
             </tr>
             <tr>
               <th>Kegemaran</th>
-              <td>{{auth()->user()->biodata->hobi}}</td>
+              <td>{{optional(auth()->user()->biodata)->hobi}}</td>
             </tr>
             <tr>
               <th>Kewarganegaraan</th>
-              <td>{{auth()->user()->biodata->kewarganegaraan}}</td>
+              <td>{{optional(auth()->user()->biodata)->kewarganegaraan}}</td>
             </tr>
             <tr>
               <th>Nama Ayah Siswa</th>
-              <td>{{auth()->user()->ayah->nama}}</td>
+              <td>{{optional(auth()->user()->ayah)->nama}}</td>
             </tr>
             <tr>
               <th>Pekerjaan Ayah</th>
-              <td>{{auth()->user()->ayah->pekerjaan}}</td>
+              <td>{{optional(auth()->user()->ayah)->pekerjaan}}</td>
             </tr>
             <tr>
               <th>Nama Ibu Siswa</th>
-              <td>{{auth()->user()->ibu->nama}}</td>
+              <td>{{optional(auth()->user()->ibu)->nama}}</td>
             </tr>
             <tr>
               <th>Pekerjaan Ibu</th>
-              <td>{{auth()->user()->ibu->pekerjaan}}</td>
+              <td>{{optional(auth()->user()->ibu)->pekerjaan}}</td>
             </tr>
           </table>
         </div>

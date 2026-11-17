@@ -13,26 +13,58 @@
         <i class="bi bi-house-door me-2"></i>Beranda
       </a>
     </li>
+    @if (auth()->user()->biodata)
     <li>
       <a href="/biodata/{{auth()->user()->biodata->uri}}" class="nav-link link-dark @if($title === 'Biodata Siswa') active @endif">
         <i class="bi bi-card-checklist me-2"></i>Biodata Siswa
       </a>
     </li>
+    @else
+    <li>
+      <span class="nav-link link-secondary disabled" title="Data belum dibuat oleh admin">
+        <i class="bi bi-card-checklist me-2"></i>Biodata Siswa
+      </span>
+    </li>
+    @endif
+    @if (auth()->user()->ibu)
     <li>
       <a href="/data-ibu/{{auth()->user()->ibu->uri}}" class="nav-link link-dark @if($title === 'Data Ibu Siswa') active @endif">
         <i class="bi bi-gender-female me-2"></i>Data Ibu Siswa
       </a>
     </li>
+    @else
+    <li>
+      <span class="nav-link link-secondary disabled" title="Data belum dibuat oleh admin">
+        <i class="bi bi-gender-female me-2"></i>Data Ibu Siswa
+      </span>
+    </li>
+    @endif
+    @if (auth()->user()->ayah)
     <li>
       <a href="/data-ayah/{{auth()->user()->ayah->uri}}" class="nav-link link-dark @if($title === 'Data Ayah Siswa') active @endif">
         <i class="bi bi-gender-male me-2"></i>Data Ayah Siswa
       </a>
     </li>
+    @else
+    <li>
+      <span class="nav-link link-secondary disabled" title="Data belum dibuat oleh admin">
+        <i class="bi bi-gender-male me-2"></i>Data Ayah Siswa
+      </span>
+    </li>
+    @endif
+    @if (auth()->user()->wali)
     <li>
       <a href="/data-wali/{{auth()->user()->wali->uri}}" class="nav-link link-dark @if($title === 'Data Wali Siswa') active @endif">
         <i class="bi bi-person me-2"></i>Data Wali Siswa
       </a>
     </li>
+    @else
+    <li>
+      <span class="nav-link link-secondary disabled" title="Data belum dibuat oleh admin">
+        <i class="bi bi-person me-2"></i>Data Wali Siswa
+      </span>
+    </li>
+    @endif
   </ul>
   <div class="dropdown fixed-bottom" style="bottom: 20px; left: 30px">
     <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">

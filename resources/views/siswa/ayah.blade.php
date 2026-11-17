@@ -7,7 +7,7 @@
           <h3 class="text-uppercase fw-bold text-center">{{ $title }}</h3>
         </div>
       </div>
-      <form action="/admin/ayah/{{ $res->uri }}" method="post" class="mx-3 my-3">
+      <form action="/data-ayah/{{ $res->uri }}" method="post" class="mx-3 my-3">
         @method('put')
         @csrf
         <div class="row">
@@ -26,12 +26,12 @@
             </div>
 
             <div class="mb-3">
-              <label for="tempat_lahir" class="form-label">Kota Kelahiran</label>
+              <label for="tempat_lahir" class="form-label">Kabupaten/Kota Kelahiran</label>
               <input type="text" 
                      class="form-control @error('tempat_lahir') is-invalid @enderror" 
                      name="tempat_lahir" 
                      value="{{ old('tempat_lahir', $res->tempat_lahir) }}" 
-                     placeholder="Contoh: Denpasar">
+                     placeholder="Contoh : Kab. Tanah Datar">
               @error('tempat_lahir')
                 <div class="invalid-feedback">{{ $message }}</div>
               @enderror

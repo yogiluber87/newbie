@@ -4,49 +4,74 @@
     <div class="container mt-3 card shadow">
       <div class="row justify-content-center mb-3">
         <div class="col-lg-9">
-          <form action="/biodata/{{auth()->user()->biodata->uri}}" method="post">
+          <form action="/biodata/{{ $res->uri }}" method="post">
             @method('put')
             @csrf
             <div class="container">
+              @php
+                $kelengkapan = $res->kelengkapan();
+                $labelStatus = [
+                    'kosong' => 'belum diisi',
+                    'sebagian' => 'sebagian',
+                    'lengkap' => 'lengkap',
+                ];
+                $badgeStatus = [
+                    'kosong' => 'bg-danger',
+                    'sebagian' => 'bg-warning text-dark',
+                    'lengkap' => 'bg-success',
+                ];
+              @endphp
+              <style>
+                /* Tab biodata: nomor besar berwarna sesuai kelengkapan */
+                #ex1 .nav-link.tab-tahap { position: relative; padding: .6rem .5rem; border-bottom-width: 2px; }
+                #ex1 .nav-link.tab-tahap.tab-kosong { color: #dc3545; }
+                #ex1 .nav-link.tab-tahap.tab-sebagian { color: #b8860b; }
+                #ex1 .nav-link.tab-tahap.tab-lengkap { color: #198754; }
+                #ex1 .angka-tahap {
+                  display: inline-flex; align-items: center; justify-content: center;
+                  width: 2.75rem; height: 2.75rem; border-radius: 50%;
+                  border: 2px solid currentColor; background: #fff; color: inherit;
+                  font-size: 1.4rem; font-weight: 700; line-height: 1;
+                }
+                #ex1 .nav-link.tab-tahap.active { background: #fff; border-bottom-color: #fff; }
+                #ex1 .nav-link.tab-tahap.active::after {
+                  content: ''; position: absolute; left: 0; right: 0; bottom: -2px; height: 3px;
+                  background: currentColor; border-radius: 3px;
+                }
+                /* Tab aktif: lingkaran diberi cincin, angka tetap berwarna */
+                #ex1 .nav-link.tab-tahap.active .angka-tahap { box-shadow: 0 0 0 4px rgba(0, 0, 0, .07); }
+                #ex1 .jumlah-terisi { font-variant-numeric: tabular-nums; font-weight: 600; }
+              </style>
               <!-- Tabs navs -->
-                  <ul class="nav nav-tabs nav-fill mb-3" id="ex1" role="tablist">
-                    <li class="nav-item" role="presentation">
-                      <a
-                        class="nav-link active"
-                        id="ex2-tab-1"
-                        data-bs-toggle="tab"
-                        href="#ex2-tabs-1"
-                        role="tab"
-                        aria-controls="ex2-tabs-1"
-                        aria-selected="true"
-                        ><i class="bi bi-1-circle"></i></a
-                      >
-                    </li>
-                    <li class="nav-item" role="presentation">
-                      <a
-                        class="nav-link"
-                        id="ex2-tab-2"
-                        data-bs-toggle="tab"
-                        href="#ex2-tabs-2"
-                        role="tab"
-                        aria-controls="ex2-tabs-2"
-                        aria-selected="false"
-                        ><i class="bi bi-2-circle"></i></a
-                      >
-                    </li>
-                    <li class="nav-item" role="presentation">
-                      <a
-                        class="nav-link"
-                        id="ex2-tab-3"
-                        data-bs-toggle="tab"
-                        href="#ex2-tabs-3"
-                        role="tab"
-                        aria-controls="ex2-tabs-3"
-                        aria-selected="false"
-                        ><i class="bi bi-3-circle"></i></a
-                      >
-                    </li>
+                  <ul class="nav nav-tabs nav-fill mb-2" id="ex1" role="tablist">
+                    @foreach ([1, 2, 3] as $nomor)
+                      @php
+                        $info = $kelengkapan[$nomor];
+                      @endphp
+                      <li class="nav-item" role="presentation">
+                        <a
+                          class="nav-link tab-tahap tab-{{ $info['status'] }}{{ $nomor === 1 ? ' active' : '' }}"
+                          id="ex2-tab-{{ $nomor }}"
+                          data-bs-toggle="tab"
+                          href="#ex2-tabs-{{ $nomor }}"
+                          role="tab"
+                          aria-controls="ex2-tabs-{{ $nomor }}"
+                          aria-selected="{{ $nomor === 1 ? 'true' : 'false' }}"
+                          >
+                          <span class="angka-tahap">{{ $nomor }}</span>
+                          <span class="d-block small mt-1 text-body">
+                            <span class="jumlah-terisi">{{ $info['terisi'] }}</span>/{{ $info['total'] }} terisi
+                          </span>
+                          <span class="badge rounded-pill mt-1 status-tahap {{ $badgeStatus[$info['status']] }}">{{ $labelStatus[$info['status']] }}</span>
+                        </a>
+                      </li>
+                    @endforeach
                   </ul>
+                  <p class="small text-muted text-center mb-3">
+                    <span class="badge bg-danger">Merah</span> belum diisi &middot;
+                    <span class="badge bg-warning text-dark">Kuning</span> sebagian &middot;
+                    <span class="badge bg-success">Hijau</span> lengkap
+                  </p>
                   <!-- Tabs navs -->
 
                   <!-- Tabs content -->
@@ -68,8 +93,8 @@
                         @enderror
                       </div>
                       <div class="input-group mb-3">
-                        <span class="input-group-text bg-light">Kota</span>
-                        <input type="text" class="form-control @error('kota') is-invalid @enderror" placeholder="Contoh : Jakarta Utara" name="kota" value="{{$res->kota}}">
+                        <span class="input-group-text bg-light">Kabupaten/Kota</span>
+                        <input type="text" class="form-control @error('kota') is-invalid @enderror" placeholder="Contoh : Kab. Tanah Datar" name="kota" value="{{$res->kota}}">
                         @error('kota')
                           <div class="invalid-feedback">
                             {{ $message }}  
@@ -87,7 +112,7 @@
                       </div>
                       <div class="input-group mb-3">
                         <span class="input-group-text bg-light">Tempat dan Tanggal Lahir</span>
-                        <input type="text" class="form-control @error('tempat_lahir') is-invalid @enderror" placeholder="Contoh: Jakarta Utara" name="tempat_lahir" value="{{$res->tempat_lahir}}">
+                        <input type="text" class="form-control @error('tempat_lahir') is-invalid @enderror" placeholder="Contoh : Kab. Tanah Datar" name="tempat_lahir" value="{{$res->tempat_lahir}}">
                         <input type="date" class="form-control @error('tanggal_lahir') is-invalid @enderror" name="tanggal_lahir" value="{{$res->tanggal_lahir}}">
                         @error('tempat_lahir' || 'tanggal_lahir')
                           <div class="invalid-feedback">
@@ -151,6 +176,7 @@
                       <div class="input-group mb-3">
                         <span class="input-group-text bg-light">Agama</span>
                         <select name="agama" class="form-select">
+                          <option value="" @if (empty($res->agama)) selected @endif>-- Pilih agama --</option>
                           <option value="Islam" @if ($res->agama === 'Islam') selected @endif>Islam</option>
                           <option value="Katholik"  @if ($res->agama === 'Katholik') selected @endif>Katholik</option>
                           <option value="Protestan"  @if ($res->agama === 'Protestan') selected @endif>Protestan</option>
@@ -179,6 +205,7 @@
                       <div class="input-group mb-3">
                         <span class="input-group-text bg-light">Golongan Darah</span>
                         <select name="goldar" class="form-select">
+                          <option value="" @if (empty($res->goldar)) selected @endif>-- Pilih golongan darah --</option>
                           <option value="O" @if ($res->goldar === 'O') selected @endif>O</option>
                           <option value="A"  @if ($res->goldar === 'A') selected @endif>A</option>
                           <option value="B"  @if ($res->goldar === 'B') selected @endif>B</option>
@@ -259,4 +286,52 @@
         </div>
       </div>
     </div>
+
+    <script>
+      // Hitung ulang kelengkapan tiap tab saat isian diubah, supaya siswa
+      // langsung tahu tab mana yang masih merah (belum diisi).
+      (function () {
+        var gaya = {
+          kosong: { kelas: 'tab-kosong', badge: 'bg-danger', label: 'belum diisi' },
+          sebagian: { kelas: 'tab-sebagian', badge: 'bg-warning text-dark', label: 'sebagian' },
+          lengkap: { kelas: 'tab-lengkap', badge: 'bg-success', label: 'lengkap' }
+        };
+
+        document.querySelectorAll('.tab-content .tab-pane').forEach(function (pane) {
+          var nomor = pane.id.replace('ex2-tabs-', '');
+          var tab = document.getElementById('ex2-tab-' + nomor);
+
+          if (!tab) { return; }
+
+          var kolom = pane.querySelectorAll('input:not([type="hidden"]), select, textarea');
+
+          function hitung() {
+            var terisi = 0;
+
+            kolom.forEach(function (f) {
+              if (String(f.value === undefined ? '' : f.value).trim() !== '') { terisi++; }
+            });
+
+            var status = terisi === 0 ? 'kosong' : (terisi === kolom.length ? 'lengkap' : 'sebagian');
+            var warna = gaya[status];
+
+            tab.classList.remove('tab-kosong', 'tab-sebagian', 'tab-lengkap');
+            tab.classList.add(warna.kelas);
+
+            var jumlah = tab.querySelector('.jumlah-terisi');
+            if (jumlah) { jumlah.textContent = terisi; }
+
+            var badge = tab.querySelector('.status-tahap');
+            if (badge) {
+              badge.className = 'badge rounded-pill mt-1 status-tahap ' + warna.badge;
+              badge.textContent = warna.label;
+            }
+          }
+
+          pane.addEventListener('input', hitung);
+          pane.addEventListener('change', hitung);
+          hitung();
+        });
+      })();
+    </script>
 @endsection

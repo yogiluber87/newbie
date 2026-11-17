@@ -15,16 +15,43 @@ use Illuminate\Support\Facades\Storage;
 class UserController extends Controller
 {
     /**
+     * Kunci session tempat filter terakhir disimpan.
+     */
+    private const SESSION_FILTER = 'filter_siswa';
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $siswa = User::where('status', 'siswa');
+        // Tombol Reset / tautan "Hapus semua filter"
+        if ($request->has('reset')) {
+            $request->session()->forget(self::SESSION_FILTER);
+
+            return redirect('/admin/siswa');
+        }
+
+        if ($request->hasAny(User::FILTER_KEYS)) {
+            // Filter baru dari form: simpan supaya tidak hilang saat pindah halaman
+            // (nilai kosong dan nilai berbentuk array otomatis dibuang)
+            $filters = User::filtersDari($request->all());
+
+            $request->session()->put(self::SESSION_FILTER, $filters);
+        } else {
+            // Buka halaman tanpa parameter (mis. pindah halaman atau balik dari detail siswa): pakai filter terakhir
+            $filters = User::filtersDari((array) $request->session()->get(self::SESSION_FILTER, []));
+        }
+
+        $siswa = User::query();
         return view('admin/siswa/list', [
             'title' => 'Daftar Siswa',
-            'res' => $siswa->filter(request(['cari']))->paginate(30)->withQueryString(),
+            'res' => $siswa->daftarSiswa($filters)->paginate(30)->withQueryString(),
+            'filters' => $filters,
+            'kelas' => Group::orderBy('nama')->get(),
+            'tahun' => Year::orderByDesc('tahun_ajaran')->get(),
+            'adaFilter' => count($filters) > 0,
         ]);
     }
 
@@ -56,7 +83,7 @@ class UserController extends Controller
             'nis' => 'required|max:16|regex:/[0-9]/|unique:users,nis',
             'group_id' => 'required|integer|exists:groups,id',
             'year_id' => 'required|integer|exists:years,id',
-            'jenis_kelamin' => 'required',
+            'jenis_kelamin' => 'required|in:L,P',
             'email' => 'nullable|email|unique:users,email',
             'foto' => 'nullable|image|file|max:1024',
         ], [
@@ -84,11 +111,18 @@ class UserController extends Controller
         $validated['password'] = Hash::make('siswa123');
 
         $user = User::create($validated);
-        $ayah = $user->ayah()->create(['uri' => Str::random(40)]);
-        $ibu = $user->ibu()->create(['uri' => Str::random(40)]);
-        $biodata = $user->biodata()->create(['uri' => Str::random(40)]);
-        $wali = $user->wali()->create(['uri' => Str::random(40)]);
-        return redirect('/dashboard')->with('success', 'Siswa Berhasil Ditambahkan');
+        $user->ayah()->create(['uri' => Str::random(40)]);
+        $user->ibu()->create(['uri' => Str::random(40)]);
+        $user->biodata()->create(['uri' => Str::random(40)]);
+        $user->wali()->create(['uri' => Str::random(40)]);
+
+        // Lanjut langsung ke pengisian data ayah, lalu ibu, biodata, dan wali.
+        // Data siswa sudah tersimpan lebih dulu, jadi walaupun langkah berikutnya
+        // tidak diisi semuanya, data tetap aman.
+        $user->load('ayah');
+
+        return redirect('/admin/ayah/' . optional($user->ayah)->uri . '?lanjut=1')
+            ->with('success', 'Data siswa berhasil disimpan. Lanjut mengisi data ayah.');
     }
     /**
      * Display the specified resource.
@@ -163,7 +197,7 @@ class UserController extends Controller
             'nama_lengkap' => 'required|max:50',
             'nisn' => 'required|max:16|regex:/[0-9]/|unique:users,nisn,'.$siswa->id,
             'nis' => 'required|max:16|regex:/[0-9]/|unique:users,nis,'.$siswa->id,
-            'jenis_kelamin' => 'required',
+            'jenis_kelamin' => 'required|in:L,P',
             'group_id' => 'required|integer|exists:groups,id',
             'year_id' => 'required|integer|exists:years,id',
             'email' => 'nullable|email|unique:users,email,'.$siswa->id,

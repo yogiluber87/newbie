@@ -13,4 +13,9 @@ class Mom extends Model
     public function getRouteKeyName(){
         return 'uri';
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

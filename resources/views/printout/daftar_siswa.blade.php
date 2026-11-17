@@ -44,8 +44,8 @@
             <td style="border: 1px solid black; border-collapse: collapse;">{{$item->nama_lengkap}}</td>
             <td style="border: 1px solid black; border-collapse: collapse;">{{$item->nisn}}</td>
             <td style="border: 1px solid black; border-collapse: collapse;">{{$item->nis}}</td>
-            <td style="border: 1px solid black; border-collapse: collapse;">{{$item->biodata->alamat}}</td>
-            <td style="border: 1px solid black; border-collapse: collapse;">{{$item->biodata->nomor_hp}}</td>
+            <td style="border: 1px solid black; border-collapse: collapse;">{{optional($item->biodata)->alamat}}</td>
+            <td style="border: 1px solid black; border-collapse: collapse;">{{optional($item->biodata)->nomor_hp}}</td>
           </tr>
         @endforeach
     </table>
