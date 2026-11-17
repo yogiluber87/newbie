@@ -6,8 +6,8 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <link rel="stylesheet" href="/css/login.css">
-  <link rel="icon" href="/images/tut wuri handayani.ico">
-  <title>Buku Induk Siswa</title>
+  <link rel="icon" href="{{ $setelan['has_logo'] ? $setelan['logo_url'] : asset('images/tut wuri handayani.ico') }}">
+  <title>{{ $setelan['nama_sekolah'] }}</title>
 </head>
 <body>
   <section class="vh-100">
@@ -26,8 +26,10 @@
           <form action="/" method="POST">
             @csrf
             <div class="text-center">
+              <img src="{{ $setelan['logo_url'] }}" alt="Logo" class="mb-3" style="max-height: 90px;">
               <h1 class="fw-bold">Selamat Datang</h1>
-              <p class="lead fw-normal mb-0 me-3">Aplikasi Buku Induk Siswa</p>
+              <p class="lead fw-normal mb-1 me-3">{{ $setelan['nama_sekolah'] }}</p>
+              <p class="text-muted mb-0">Aplikasi Buku Induk Siswa</p>
             </div>
   
             <div class="divider d-flex align-items-center my-4"></div>

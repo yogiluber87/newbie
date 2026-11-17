@@ -1,7 +1,10 @@
 <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px;">
   <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-    <img src="/images/tut wuri handayani.png" alt="Logo" width="40px" height="auto" class="me-2">
-    <span class="fs-4">Buku Induk Siswa</span>
+    <img src="{{ $setelan['logo_url'] }}" alt="Logo" width="40px" height="auto" class="me-2">
+    <span class="d-flex flex-column lh-sm">
+      <span class="fs-6 fw-semibold">{{ $setelan['nama_sekolah'] }}</span>
+      <small class="text-muted">Buku Induk Siswa</small>
+    </span>
   </a>
   <hr>
   <ul class="nav nav-pills flex-column mb-auto fs-5 sticky-top">

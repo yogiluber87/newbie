@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Group;
 use App\Models\Year;
+use App\Models\Mutation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -99,7 +100,8 @@ class UserController extends Controller
     {
         return view('admin/siswa/detail', [
             'title' => $siswa->nama_lengkap,
-            'res' => $siswa
+            'res' => $siswa,
+            'mutasi' => Mutation::where('user_id', $siswa->id)->orderBy('tanggal_pindah')->get(),
         ]);
     }
 
@@ -218,10 +220,4 @@ class UserController extends Controller
 
         return redirect('/admin/siswa')->with('success', 'Data siswa berhasil dihapus');
     }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
 }

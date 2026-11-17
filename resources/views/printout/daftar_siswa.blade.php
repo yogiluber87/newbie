@@ -4,10 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Daftar Siswa</title>
+  <title>Daftar Siswa - {{ $setelan['nama_sekolah'] }}</title>
 </head>
 <body>
   <div>
+    @php
+      $logoPath = $setelan['has_logo']
+          ? storage_path('app/public/' . $setelan['logo'])
+          : public_path('images/tut wuri handayani.png');
+    @endphp
+    <table style="width: 100%; border-bottom: 3px double #000; margin-bottom: 10px;">
+      <tr>
+        <td style="width: 80px;">
+          <img src="{{ $logoPath }}" alt="Logo" width="65px">
+        </td>
+        <td style="text-align: center;">
+          <h2 style="margin: 0;">{{ $setelan['nama_sekolah'] }}</h2>
+          @if ($setelan['alamat_sekolah'])
+            <p style="margin: 4px 0 0;">{{ $setelan['alamat_sekolah'] }}</p>
+          @endif
+        </td>
+        <td style="width: 80px;"></td>
+      </tr>
+    </table>
     <h3 style="text-align: center">Daftar Siswa</h3>
     <hr>
     <table style="border: 1px solid black; border-collapse: collapse;">

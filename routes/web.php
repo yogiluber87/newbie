@@ -8,6 +8,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\TahunController;
 use App\Http\Controllers\SiswaImportController;
+use App\Http\Controllers\SiswaDataController;
+use App\Http\Controllers\SettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +47,12 @@ Route::post('/admin/siswa/cek-duplikat', [UserController::class, 'cekDuplikat'])
 Route::get('/admin/siswa/import', [SiswaImportController::class, 'form'])->middleware('admin');
 Route::post('/admin/siswa/import', [SiswaImportController::class, 'store'])->middleware('admin');
 Route::get('/admin/siswa/import/template', [SiswaImportController::class, 'template'])->middleware('admin');
+Route::get('/admin/siswa/import-lengkap', [SiswaImportController::class, 'formLengkap'])->middleware('admin');
+Route::post('/admin/siswa/import-lengkap', [SiswaImportController::class, 'storeLengkap'])->middleware('admin');
+Route::get('/admin/siswa/import-lengkap/template', [SiswaImportController::class, 'templateLengkap'])->middleware('admin');
+Route::post('/admin/siswa/ekspor-pilihan', [SiswaDataController::class, 'exportPilihan'])->middleware('admin');
+Route::get('/admin/siswa/ekspor-semua-csv', [SiswaDataController::class, 'exportSemuaCsv'])->middleware('admin');
+Route::get('/admin/siswa/{siswa}/ekspor', [SiswaDataController::class, 'exportSatuCsv'])->middleware('admin');
 Route::resource('/admin/siswa', UserController::class)->middleware('admin');
 Route::resource('/admin/grup', KelasController::class)->middleware('admin');
 Route::resource('/admin/tahun', TahunController::class)->middleware('admin');
@@ -60,7 +68,10 @@ Route::get('admin/mutasi', [Admin::class, 'list_mutasi'])->middleware('admin');
 Route::get('admin/mutasi/{siswa}', [Admin::class, 'mutasi_form'])->middleware('admin');
 Route::post('admin/mutasi/{siswa}', [Admin::class, 'edit_mutasi'])->middleware('admin');
 Route::delete('/admin/mutasi/{mutation}', [Admin::class, 'delete_mutasi'])->name('mutasi.delete');
+Route::get('/admin/pengaturan', [SettingController::class, 'edit'])->middleware('admin');
+Route::post('/admin/pengaturan', [SettingController::class, 'update'])->middleware('admin');
 Route::get('admin/print', [Printer::class, 'daftar_siswa'])->middleware('admin');
+Route::post('admin/print/terpilih', [Printer::class, 'buku_induk_pilihan'])->middleware('admin');
 Route::get('admin/print/{siswa}', [Printer::class, 'data_siswa'])->middleware('auth');
 
 // // tampil semua mutasi

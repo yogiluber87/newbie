@@ -26,6 +26,7 @@
               <li>Kolom <code>jenis_kelamin</code> diisi <strong>L</strong> atau <strong>P</strong>.</li>
               <li>Kelas dan tahun ajaran yang belum ada akan dibuat otomatis.</li>
               <li>Siswa dengan NISN/NIS yang sudah terdaftar akan <strong>dilewati</strong>.</li>
+              <li>Angka nol di depan aman: NISN/NIS yang ditulis <code>="0123456789"</code> atau <code>'013</code> tetap dibaca utuh, dan kalau nol depannya hilang akan dilengkapi otomatis mengikuti data siswa yang sudah ada.</li>
             </ul>
           </div>
 

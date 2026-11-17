@@ -2,10 +2,22 @@
 
 @section('content')
     <div class="container card shadow w-100 mt-3 mb-3 p-3">
+      @if (session()->has('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      @endif
+      @if (session()->has('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <i class="bi bi-exclamation-triangle me-2"></i>{{ session('error') }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      @endif
       <div class="row justify-content-center">
         <h3 class="text-center"><i class="bi bi-person me-2"></i> Data Induk siswa</h3>
         <div class="col-lg-8 pt-2 text-center">
-          <a href="/admin/print/{{$res->nisn}}" class="btn btn-warning btn-sm"><i class="bi bi-printer me-2"></i>Cetak</a>
+          <a href="/admin/print/{{$res->nisn}}" class="btn btn-danger btn-sm"><i class="bi bi-filetype-pdf me-2"></i>Ekspor PDF</a>
           <a href="/admin/ayah/{{$res->ayah->uri}}" class="btn btn-success btn-sm"><i class="bi bi-pencil me-2"></i>Ayah</a>
           <a href="/admin/ibu/{{$res->ibu->uri}}" class="btn btn-sm" style="background-color: pink;"><i class="bi bi-pencil me-2"></i>Ibu</a>
           <a href="/admin/biodata/{{$res->biodata->uri}}" class="btn btn-secondary btn-sm"><i class="bi bi-pencil me-2"></i>Biodata</a>
@@ -13,6 +25,7 @@
             <a href="/admin/wali/{{$res->wali->uri}}" class="btn btn-sm" style="background-color: greenyellow"><i class="bi bi-pencil me-2"></i>Wali</a>
           @endif
           <a href="/admin/mutasi/{{$res->nisn}}" class="btn btn-sm" style="background-color: skyblue;"><i class="bi bi-arrow-left-right me-2"></i>Mutasi</a>
+          <a href="/admin/siswa/{{$res->nisn}}/ekspor" class="btn btn-dark btn-sm"><i class="bi bi-filetype-csv me-2"></i>Ekspor Data (CSV)</a>
         </div>
       </div>
       <div class="row mb-3">
@@ -253,5 +266,91 @@
           </table>
         </div>
       </div>
+      <div class="row mb-3 justify-content-center">
+        <h3 class="mb-3">C. Keterangan Wali Siswa</h3>
+        <div class="col-lg-5">
+          <table class="table">
+            <tr>
+              <th>Nama Wali</th>
+              <td>:</td>
+              <td>{{ optional($res->wali)->nama }}</td>
+            </tr>
+            <tr>
+              <th>Tempat, Tanggal Lahir Wali</th>
+              <td>:</td>
+              <td>{{ optional($res->wali)->tempat_lahir }}{{ optional($res->wali)->tempat_lahir && optional($res->wali)->tanggal_lahir ? ', ' : '' }}{{ optional($res->wali)->tanggal_lahir }}</td>
+            </tr>
+            <tr>
+              <th>Agama Wali</th>
+              <td>:</td>
+              <td>{{ optional($res->wali)->agama }}</td>
+            </tr>
+            <tr>
+              <th>Kewarganegaraan Wali</th>
+              <td>:</td>
+              <td>{{ optional($res->wali)->kewarganegaraan }}</td>
+            </tr>
+            <tr>
+              <th>Pekerjaan Wali</th>
+              <td>:</td>
+              <td>{{ optional($res->wali)->pekerjaan }}</td>
+            </tr>
+          </table>
+        </div>
+        <div class="col-lg-5">
+          <table class="table">
+            <tr>
+              <th>Pendidikan Terakhir Wali</th>
+              <td>:</td>
+              <td>{{ optional($res->wali)->pendidikan }}</td>
+            </tr>
+            <tr>
+              <th>Penghasilan perbulan Wali</th>
+              <td>:</td>
+              <td>{{ optional($res->wali)->penghasilan !== null ? 'Rp. '.number_format(optional($res->wali)->penghasilan, 2,',', '.') : '' }}</td>
+            </tr>
+            <tr>
+              <th>Alamat Wali</th>
+              <td>:</td>
+              <td>{{ optional($res->wali)->alamat }}</td>
+            </tr>
+            <tr>
+              <th>Nomor Telepon Wali</th>
+              <td>:</td>
+              <td>{{ optional($res->wali)->nomor_hp }}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="row mb-3 justify-content-center">
+        <h3 class="mb-3">D. Mutasi Siswa</h3>
+        <div class="col-lg-10">
+          @if ($mutasi->isEmpty())
+            <p class="text-muted">Belum ada data mutasi untuk siswa ini.</p>
+          @else
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>No.</th>
+                  <th>Tujuan Sekolah</th>
+                  <th>Alasan</th>
+                  <th>Tanggal Pindah</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach ($mutasi as $m)
+                  <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $m->tujuan }}</td>
+                    <td>{{ $m->alasan }}</td>
+                    <td>{{ $m->tanggal_pindah }}</td>
+                  </tr>
+                @endforeach
+              </tbody>
+            </table>
+          @endif
+        </div>
+      </div>
     </div>
+
 @endsection

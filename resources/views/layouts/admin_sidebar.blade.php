@@ -1,7 +1,10 @@
 <div class="p-3 bg-white" style="width: 280px;">
   <a href="/" class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
-    <img src="/images/tut wuri handayani.png" alt="Logo" width="30px" height="auto" class="me-2">
-    <span class="fs-6">Buku Induk Siswa</span>
+    <img src="{{ $setelan['logo_url'] }}" alt="Logo" width="30px" height="auto" class="me-2">
+    <span class="d-flex flex-column lh-sm">
+      <span class="fs-6">{{ $setelan['nama_sekolah'] }}</span>
+      <small class="text-muted">Buku Induk Siswa</small>
+    </span>
   </a>
   <ul class="list-unstyled ps-0 sticky-top">
     <li class="mb-3">
@@ -40,6 +43,9 @@
           <li><a href="/admin/tahun" class="link-dark rounded">Daftar Tahun Ajaran</a></li>
         </ul>
       </div>
+    </li>
+    <li class="mb-3">
+      <a href="/admin/pengaturan" class="text-decoration-none btn btn-outline-info border-light text-dark w-100 text-start"><i class="bi bi-gear me-2"></i> Pengaturan</a>
     </li>
     <li class="border-top my-3"></li>
     <li class="mb-1">
