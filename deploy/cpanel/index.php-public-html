@@ -1,0 +1,37 @@
+<?php
+
+/*
+|--------------------------------------------------------------------------
+| index.php untuk cPanel - cara B (proyek di luar public_html)
+|--------------------------------------------------------------------------
+| Ganti public_html/index.php dengan berkas ini bila aplikasi diletakkan di
+| /home/USERNAME/induk sedangkan document root terkunci di public_html.
+| Sesuaikan "induk" dengan nama folder proyek Anda.
+*/
+
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Http\Request;
+
+define('LARAVEL_START', microtime(true));
+
+// Folder proyek, relatif terhadap public_html
+$proyek = __DIR__ . '/../induk';
+
+// Mode maintenance
+if (file_exists($maintenance = $proyek . '/storage/framework/maintenance.php')) {
+    require $maintenance;
+}
+
+// Autoloader Composer
+require $proyek . '/vendor/autoload.php';
+
+// Bootstrap Laravel
+$app = require_once $proyek . '/bootstrap/app.php';
+
+$kernel = $app->make(Kernel::class);
+
+$response = $kernel->handle(
+    $request = Request::capture()
+)->send();
+
+$kernel->terminate($request, $response);

@@ -17,7 +17,7 @@
       <div class="row justify-content-center">
         @if (count($res) === 0)
             <div class="col-lg-9 text-center">
-              <img src="/images/empty.jpg" alt="" class="img-fluid" width="200px">
+              <img src="{{ asset('images/empty.jpg') }}" alt="" class="img-fluid" width="200px">
               <h2 class="text-capitalize text-warning fw-bold">belum ada data kelas</h2>
               <a href="/admin/grup/create" class="btn btn-primary btn-sm px-3"><i class="bi bi-plus me-1"></i> Tambah Kelas</a>
             </div>

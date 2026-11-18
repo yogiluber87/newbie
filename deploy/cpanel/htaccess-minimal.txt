@@ -1,0 +1,14 @@
+# Versi minimal: dipakai kalau hosting menolak direktif Options (penyebab 403/500)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Kalau aplikasi diakses dari subfolder, hapus tanda # di baris berikut
+    # dan sesuaikan namanya, contoh: RewriteBase /induk/
+    #RewriteBase /
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+DirectoryIndex index.php

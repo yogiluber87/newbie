@@ -93,3 +93,22 @@ Route::get('admin/print/{siswa}', [Printer::class, 'data_siswa'])->middleware('a
 
 
 
+
+/*
+|--------------------------------------------------------------------------
+| Cadangan penayangan berkas unggahan
+|--------------------------------------------------------------------------
+| Dipakai bila hosting tidak mendukung symlink public/storage. Kalau symlink
+| tersedia, web server melayani berkas lebih dulu sehingga rute ini tidak
+| terpakai. Path divalidasi supaya tidak bisa keluar dari folder storage.
+*/
+Route::get('storage/{path}', function (string $path) {
+    $akar = realpath(storage_path('app/public'));
+    $berkas = realpath(storage_path('app/public/' . $path));
+
+    abort_if($akar === false || $berkas === false || !is_file($berkas), 404);
+    abort_unless(str_starts_with($berkas, $akar . DIRECTORY_SEPARATOR), 404);
+
+    return response()->file($berkas);
+})->where('path', '.*');
+

@@ -303,7 +303,7 @@
       @else
         <div class="row justify-content-center mb-3 p-3">
           <div class="col-lg-9 text-center">
-            <img src="/images/empty.jpg" alt="" class="img-fluid" width="200px">
+            <img src="{{ asset('images/empty.jpg') }}" alt="" class="img-fluid" width="200px">
             <h2 class="text-uppercase text-warning fw-bold mb-3">data siswa tidak ditemukan</h2>
             @if ($filterAktif->isNotEmpty())
               <p class="text-muted">Tidak ada siswa yang cocok dengan filter yang dipakai.

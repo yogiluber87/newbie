@@ -48,7 +48,7 @@
         </div>
         @else
         <div class="col-lg-9 text-center">
-          <img src="/images/empty.jpg" alt="" class="img-fluid" width="200px">
+          <img src="{{ asset('images/empty.jpg') }}" alt="" class="img-fluid" width="200px">
           <h2 class="text-capitalize text-warning fw-bold">data siswa kosong</h2>
           <a href="/admin/siswa/create" class="btn btn-primary btn-sm px-3"><i class="bi bi-plus me-1"></i> Tambah Siswa</a>
         </div>
