@@ -43,27 +43,28 @@
         <h3 class="text-center"><i class="bi bi-person me-2"></i> Data Induk siswa</h3>
         <div class="col-lg-10 pt-2 pb-4">
           <div class="d-flex flex-wrap justify-content-center gap-2">
-            <a href="/admin/print/{{$res->nisn}}" class="btn btn-danger btn-sm"><i class="bi bi-filetype-pdf me-2"></i>Ekspor PDF</a>
+            <a href="/admin/print/{{$res->nisn}}/preview" class="btn btn-warning btn-sm"><i class="bi bi-printer me-1"></i> Preview &amp; Cetak PDF</a>
+            <a href="/admin/print/{{$res->nisn}}" class="btn btn-outline-danger btn-sm" title="Unduh berkas PDF tanpa preview"><i class="bi bi-download me-1"></i> Unduh PDF</a>
             @if ($ayah)
-              <a href="/admin/ayah/{{ $ayah->uri }}" class="btn btn-success btn-sm"><i class="bi bi-pencil me-2"></i>Ayah</a>
+              <a href="/admin/ayah/{{ $ayah->uri }}" class="btn btn-success btn-sm"><i class="bi bi-pencil me-1"></i> Ayah</a>
             @else
-              <span class="btn btn-outline-success btn-sm disabled" title="Data ayah belum ada"><i class="bi bi-pencil me-2"></i>Ayah</span>
+              <span class="btn btn-outline-success btn-sm disabled" title="Data ayah belum ada"><i class="bi bi-pencil me-1"></i> Ayah</span>
             @endif
             @if ($ibu)
-              <a href="/admin/ibu/{{ $ibu->uri }}" class="btn btn-sm" style="background-color: pink;"><i class="bi bi-pencil me-2"></i>Ibu</a>
+              <a href="/admin/ibu/{{ $ibu->uri }}" class="btn btn-sm" style="background-color: pink;"><i class="bi bi-pencil me-1"></i> Ibu</a>
             @else
-              <span class="btn btn-outline-secondary btn-sm disabled" title="Data ibu belum ada"><i class="bi bi-pencil me-2"></i>Ibu</span>
+              <span class="btn btn-outline-secondary btn-sm disabled" title="Data ibu belum ada"><i class="bi bi-pencil me-1"></i> Ibu</span>
             @endif
             @if ($bio)
-              <a href="/admin/biodata/{{ $bio->uri }}" class="btn btn-secondary btn-sm"><i class="bi bi-pencil me-2"></i>Biodata</a>
+              <a href="/admin/biodata/{{ $bio->uri }}" class="btn btn-secondary btn-sm"><i class="bi bi-pencil me-1"></i> Biodata</a>
             @else
-              <span class="btn btn-outline-secondary btn-sm disabled" title="Biodata belum ada"><i class="bi bi-pencil me-2"></i>Biodata</span>
+              <span class="btn btn-outline-secondary btn-sm disabled" title="Biodata belum ada"><i class="bi bi-pencil me-1"></i> Biodata</span>
             @endif
             @if ($res->wali)
-              <a href="/admin/wali/{{optional($wali)->uri}}" class="btn btn-sm" style="background-color: greenyellow"><i class="bi bi-pencil me-2"></i>Wali</a>
+              <a href="/admin/wali/{{optional($wali)->uri}}" class="btn btn-sm" style="background-color: greenyellow"><i class="bi bi-pencil me-1"></i> Wali</a>
             @endif
-            <a href="/admin/mutasi/{{$res->nisn}}" class="btn btn-sm" style="background-color: skyblue;"><i class="bi bi-arrow-left-right me-2"></i>Mutasi</a>
-            <a href="/admin/siswa/{{$res->nisn}}/ekspor" class="btn btn-dark btn-sm"><i class="bi bi-filetype-csv me-2"></i>Ekspor Data (CSV)</a>
+            <a href="/admin/mutasi/{{$res->nisn}}" class="btn btn-sm" style="background-color: skyblue;"><i class="bi bi-arrow-left-right me-1"></i> Mutasi</a>
+            <a href="/admin/siswa/{{$res->nisn}}/ekspor" class="btn btn-dark btn-sm"><i class="bi bi-filetype-csv me-1"></i> Ekspor Data (CSV)</a>
           </div>
         </div>
       </div>
@@ -100,7 +101,7 @@
                   </a>
                 @endforeach
                 <a href="{{ optional($res->ayah)->uri ? '/admin/ayah/' . optional($ayah)->uri . '?lanjut=1' : '#' }}" class="btn btn-success btn-sm ms-auto">
-                  <i class="bi bi-play-fill me-1"></i>Lanjutkan pengisian data
+                  <i class="bi bi-play-fill me-1"></i> Lanjutkan pengisian data
                 </a>
               </div>
               <div class="small text-muted mt-2">

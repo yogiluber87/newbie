@@ -9,7 +9,7 @@
 <body>
   @foreach ($res as $siswa)
     <div style="margin: 34px 20px; width: 100%; {{ $loop->last ? '' : 'page-break-after: always;' }}">
-      @include('printout.partials.kop_sekolah')
+      @include('printout.partials.kop_sekolah', ['judul' => 'Buku Induk Siswa'])
       @include('printout.partials.buku_induk', ['res' => $siswa])
     </div>
   @endforeach

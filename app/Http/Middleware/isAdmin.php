@@ -5,6 +5,10 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
+/**
+ * Membatasi rute area admin hanya untuk petugas:
+ * superadmin dan tata usaha. Siswa ditolak (403).
+ */
 class isAdmin
 {
     /**
@@ -16,9 +20,10 @@ class isAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if(auth()->guest() || auth()->user()->status !== 'admin'){
+        if (auth()->guest() || !auth()->user()->isStaff()) {
             abort(403);
         }
+
         return $next($request);
     }
 }

@@ -66,7 +66,7 @@
         @endif
       @endforeach
       <a href="/admin/siswa/{{ $siswa->nisn }}" class="badge rounded-pill bg-dark text-decoration-none" style="font-size: .78rem; padding: .5em .75em;">
-        <i class="bi bi-flag-fill me-1"></i>Selesai
+        <i class="bi bi-flag-fill me-1"></i> Selesai
       </a>
     </div>
     <div class="small text-muted mt-2">

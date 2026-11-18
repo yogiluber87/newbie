@@ -32,7 +32,7 @@
 
           <div class="mb-3">
             <a href="/admin/siswa/import/template" class="btn btn-outline-secondary btn-sm">
-              <i class="bi bi-download me-2"></i>Unduh Template CSV
+              <i class="bi bi-download me-1"></i> Unduh Template CSV
             </a>
           </div>
 
@@ -48,11 +48,13 @@
               @enderror
             </div>
 
-            <div class="row mb-3">
-              <p class="fw-light"><span class="text-danger fw-bold">*</span> maksimal 5 MB per unggahan</p>
-              <button type="submit" class="btn btn-primary w-100"><i class="bi bi-upload me-2"></i> Mulai Impor</button>
+            <div class="mb-3">
+              <p class="fw-light mb-2"><span class="text-danger fw-bold">*</span> maksimal 5 MB per unggahan</p>
+              <div class="d-flex justify-content-end gap-2">
+                <a href="/admin/siswa" class="btn btn-light btn-sm px-3 border">Batal</a>
+                <button type="submit" class="btn btn-primary btn-sm px-3"><i class="bi bi-upload me-1"></i> Mulai Impor</button>
+              </div>
             </div>
-            <a href="/admin/siswa" class="btn btn-light w-100">Batal</a>
           </form>
         </div>
       </div>

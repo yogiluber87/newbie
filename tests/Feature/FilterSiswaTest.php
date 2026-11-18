@@ -222,8 +222,9 @@ class FilterSiswaTest extends TestCase
     public function test_kata_kunci_nol_tidak_dianggap_kosong()
     {
         // NISN tanpa angka 0 dan NISN dengan angka 0 sebagai pembanding
-        $tanpaNol = $this->siswaUji(['nisn' => '2222222222', 'nis' => '2222222222']);
-        $denganNol = $this->siswaUji(['nisn' => '9000011111', 'nis' => '9000011111']);
+        // (nama harus eksplisit: Str::random bisa saja menghasilkan angka 0)
+        $tanpaNol = $this->siswaUji(['nama_lengkap' => 'Uji Tanpa Nol', 'nisn' => '2222222222', 'nis' => '2222222222']);
+        $denganNol = $this->siswaUji(['nama_lengkap' => 'Uji Dengan Nol', 'nisn' => '9000011111', 'nis' => '9000011111']);
 
         $hasil = User::where('status', 'siswa')->filter(['nisn' => '0'])->pluck('nisn')->all();
 

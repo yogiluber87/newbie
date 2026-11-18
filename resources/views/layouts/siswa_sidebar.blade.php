@@ -1,85 +1,78 @@
-<div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px;">
-  <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-    <img src="{{ $setelan['logo_url'] }}" alt="Logo" width="40px" height="auto" class="me-2">
-    <span class="d-flex flex-column lh-sm">
-      <span class="fs-6 fw-semibold">{{ $setelan['nama_sekolah'] }}</span>
-      <small class="text-muted">Buku Induk Siswa</small>
-    </span>
-  </a>
-  <hr>
-  <ul class="nav nav-pills flex-column mb-auto fs-5 sticky-top">
-    <li class="nav-item">
-      <a href="/home" class="nav-link link-dark @if($title === 'Beranda') active @endif">
-        <i class="bi bi-house-door me-2"></i>Beranda
-      </a>
-    </li>
-    @if (auth()->user()->biodata)
-    <li>
-      <a href="/biodata/{{auth()->user()->biodata->uri}}" class="nav-link link-dark @if($title === 'Biodata Siswa') active @endif">
-        <i class="bi bi-card-checklist me-2"></i>Biodata Siswa
-      </a>
-    </li>
-    @else
-    <li>
-      <span class="nav-link link-secondary disabled" title="Data belum dibuat oleh admin">
-        <i class="bi bi-card-checklist me-2"></i>Biodata Siswa
-      </span>
-    </li>
-    @endif
-    @if (auth()->user()->ibu)
-    <li>
-      <a href="/data-ibu/{{auth()->user()->ibu->uri}}" class="nav-link link-dark @if($title === 'Data Ibu Siswa') active @endif">
-        <i class="bi bi-gender-female me-2"></i>Data Ibu Siswa
-      </a>
-    </li>
-    @else
-    <li>
-      <span class="nav-link link-secondary disabled" title="Data belum dibuat oleh admin">
-        <i class="bi bi-gender-female me-2"></i>Data Ibu Siswa
-      </span>
-    </li>
-    @endif
-    @if (auth()->user()->ayah)
-    <li>
-      <a href="/data-ayah/{{auth()->user()->ayah->uri}}" class="nav-link link-dark @if($title === 'Data Ayah Siswa') active @endif">
-        <i class="bi bi-gender-male me-2"></i>Data Ayah Siswa
-      </a>
-    </li>
-    @else
-    <li>
-      <span class="nav-link link-secondary disabled" title="Data belum dibuat oleh admin">
-        <i class="bi bi-gender-male me-2"></i>Data Ayah Siswa
-      </span>
-    </li>
-    @endif
-    @if (auth()->user()->wali)
-    <li>
-      <a href="/data-wali/{{auth()->user()->wali->uri}}" class="nav-link link-dark @if($title === 'Data Wali Siswa') active @endif">
-        <i class="bi bi-person me-2"></i>Data Wali Siswa
-      </a>
-    </li>
-    @else
-    <li>
-      <span class="nav-link link-secondary disabled" title="Data belum dibuat oleh admin">
-        <i class="bi bi-person me-2"></i>Data Wali Siswa
-      </span>
-    </li>
-    @endif
-  </ul>
-  <div class="dropdown fixed-bottom" style="bottom: 20px; left: 30px">
-    <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
-      <img src="@if (auth()->user()->foto === NULL) @if(auth()->user()->jenis_kelamin === 'L') /images/male.png @else /images/female.png @endif @else{{asset('storage/'.auth()->user()->foto)}}@endif" alt="" width="32" height="32" class="rounded-circle me-2">
-      <strong>{{auth()->user()->nama_lengkap}}</strong>
+@php
+    /*
+     * Menu sidebar untuk siswa: hanya data miliknya sendiri.
+     */
+    $u = auth()->user();
+@endphp
+
+<ul class="side-menu">
+  <li class="side-menu-label">Menu Utama</li>
+
+  <li>
+    <a href="/home" class="{{ request()->is('home') ? 'active' : '' }}">
+      <span class="side-menu-icon"><i class="fas fa-home"></i></span>
+      <span class="side-menu-title">Beranda</span>
     </a>
-    <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
-      <li><a class="dropdown-item" href="/password/{{auth()->user()->nisn}}">Ganti Password</a></li>
-      <li><hr class="dropdown-divider"></li>
-      <li>
-        <form action="/keluar" method="POST">
-          @csrf
-          <button type="submit" class="dropdown-item"><i class="bi bi-box-arrow-right me-1"></i>Keluar</button>
-        </form>
-      </li>
-    </ul>
-  </div>
-</div>
+  </li>
+
+  <li class="side-menu-label">Data Saya</li>
+
+  @if ($u->biodata)
+    <li>
+      <a href="/biodata/{{ $u->biodata->uri }}" class="{{ $title === 'Biodata Siswa' ? 'active' : '' }}">
+        <span class="side-menu-icon"><i class="fas fa-id-card"></i></span>
+        <span class="side-menu-title">Biodata Siswa</span>
+      </a>
+    </li>
+  @else
+    <li>
+      <span class="text-muted" style="display:flex;gap:10px;padding:10px 14px;font-size:13px;" title="Data belum dibuat oleh petugas">
+        <span class="side-menu-icon"><i class="fas fa-id-card"></i></span>
+        <span class="side-menu-title">Biodata Siswa</span>
+      </span>
+    </li>
+  @endif
+
+  @if ($u->ibu)
+    <li>
+      <a href="/data-ibu/{{ $u->ibu->uri }}" class="{{ $title === 'Data Ibu Siswa' ? 'active' : '' }}">
+        <span class="side-menu-icon"><i class="fas fa-female"></i></span>
+        <span class="side-menu-title">Data Ibu</span>
+      </a>
+    </li>
+  @endif
+
+  @if ($u->ayah)
+    <li>
+      <a href="/data-ayah/{{ $u->ayah->uri }}" class="{{ $title === 'Data Ayah Siswa' ? 'active' : '' }}">
+        <span class="side-menu-icon"><i class="fas fa-male"></i></span>
+        <span class="side-menu-title">Data Ayah</span>
+      </a>
+    </li>
+  @endif
+
+  @if ($u->wali)
+    <li>
+      <a href="/data-wali/{{ $u->wali->uri }}" class="{{ $title === 'Data Wali Siswa' ? 'active' : '' }}">
+        <span class="side-menu-icon"><i class="fas fa-user-friends"></i></span>
+        <span class="side-menu-title">Data Wali</span>
+      </a>
+    </li>
+  @endif
+
+  <li class="side-menu-label">Akun</li>
+
+  <li>
+    <a href="/password/{{ $u->nisn }}" class="{{ $title === 'Ganti Password' ? 'active' : '' }}">
+      <span class="side-menu-icon"><i class="fas fa-key"></i></span>
+      <span class="side-menu-title">Ganti Password</span>
+    </a>
+  </li>
+
+  <li>
+    <a href="/admin/print/{{ $u->nisn }}/preview">
+      <span class="side-menu-icon"><i class="fas fa-print"></i></span>
+      <span class="side-menu-title">Cetak Buku Induk</span>
+    </a>
+  </li>
+</ul>

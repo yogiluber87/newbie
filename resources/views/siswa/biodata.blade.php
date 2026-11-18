@@ -82,7 +82,6 @@
                       role="tabpanel"
                       aria-labelledby="ex2-tab-1"
                     >
-                    <h3 class="text-uppercase text-center">{{$title}}</h3>
                       <div class="input-group mb-3">
                         <span class="input-group-text bg-light">Alamat</span>
                         <input type="text" class="form-control @error('alamat') is-invalid @enderror" placeholder="Contoh : Jl. Kemuning No.7" name="alamat" value="{{$res->alamat}}">
@@ -163,7 +162,6 @@
                       role="tabpanel"
                       aria-labelledby="ex2-tab-2"
                     >
-                      <h3 class="text-uppercase text-center">{{$title}}</h3>
                       <div class="input-group mb-3">
                         <span class="input-group-text bg-light">Bahasa sehari-hari</span>
                         <input type="text" class="form-control @error('bahasa') is-invalid @enderror" placeholder="Contoh : Bahasa Indonesia" name="bahasa" value="{{$res->bahasa}}">
@@ -237,7 +235,6 @@
                       role="tabpanel"
                       aria-labelledby="ex2-tab-3"
                     > 
-                      <h3 class="text-uppercase text-center">{{$title}}</h3>
                       <div class="input-group mb-3">
                         <span class="input-group-text bg-light">Riwayat penyakit</span>
                         <input type="text" class="form-control @error('penyakit') is-invalid @enderror" placeholder="Contoh : Asma" name="penyakit" value="{{$res->penyakit}}">
@@ -274,9 +271,11 @@
                           </div>                   
                         @enderror
                       </div>
-                      <div class="d-grip gap-2 mb-3 w-100">
-                        <p class="fw-light"><span class="text-danger fw-bold">*</span> pastikan data yang kamu masukkan benar dan sesuai ketentuan</p>
-                        <button type="submit" class="btn btn-primary w-100"><i class="bi bi-cloud-check me-2"></i> Simpan</button>
+                      <div class="mb-3">
+                        <p class="fw-light mb-2"><span class="text-danger fw-bold">*</span> pastikan data yang kamu masukkan benar dan sesuai ketentuan</p>
+                        <div class="d-flex justify-content-end">
+                          <button type="submit" class="btn btn-primary btn-sm px-3"><i class="bi bi-cloud-check me-1"></i> Simpan</button>
+                        </div>
                       </div>
                     </div>
                   </div>

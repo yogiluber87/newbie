@@ -102,7 +102,7 @@ class StabilitasDataTest extends TestCase
 
         $this->actingAs($siswa)->get('/home')->assertOk()
             // Menu yang datanya belum ada tampil nonaktif, bukan tautan rusak
-            ->assertSee('Data belum dibuat oleh admin');
+            ->assertSee('Data belum dibuat oleh petugas');
         $this->actingAs($siswa)->get('/password/' . $siswa->nisn)->assertOk();
     }
 
@@ -212,7 +212,8 @@ class StabilitasDataTest extends TestCase
 
         $this->actingAs($admin)->get('/dashboard')
             ->assertOk()
-            ->assertSee('Jumlah Siswa : ' . $jumlahAktif);
+            ->assertSee('Siswa aktif')
+            ->assertSee((string) $jumlahAktif);
     }
 
     public function test_tambah_siswa_admin_langsung_membuat_relasi_lengkap()

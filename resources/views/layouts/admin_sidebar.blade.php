@@ -1,67 +1,98 @@
-<div class="p-3 bg-white" style="width: 280px;">
-  <a href="/" class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
-    <img src="{{ $setelan['logo_url'] }}" alt="Logo" width="30px" height="auto" class="me-2">
-    <span class="d-flex flex-column lh-sm">
-      <span class="fs-6">{{ $setelan['nama_sekolah'] }}</span>
-      <small class="text-muted">Buku Induk Siswa</small>
-    </span>
-  </a>
-  <ul class="list-unstyled ps-0 sticky-top">
-    <li class="mb-3">
-        <a href="/dashboard" class="text-decoration-none btn btn-outline-info border-light text-dark w-100 text-start"><i class="bi bi-speedometer me-2"></i> Dashboard</a>
-    </li>
-    <li class="mb-3">
-      <button class="btn btn-outline-info border-light text-dark  align-items-center rounded collapsed w-100 text-start" data-bs-toggle="collapse" data-bs-target="#kesiswaan-collapse" aria-expanded="false">
-        <i class="bi bi-person me-2"></i> Kesiswaan
-      </button>
-      <div class="collapse mt-2" id="kesiswaan-collapse">
-        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-          <li><a href="/admin/siswa/create" class="link-dark rounded">Tambah Siswa</a></li>
-          <li><a href="/admin/siswa" class="link-dark rounded">Daftar Siswa</a></li>
-          <li><a href="/admin/mutasi" class="link-dark rounded">Data Mutasi</a></li>
-        </ul>
-      </div>
-    </li>
-    <li class="mb-3">
-      <button class="btn btn-outline-info border-light align-items-center rounded collapsed text-dark w-100 text-start" data-bs-toggle="collapse" data-bs-target="#kelas-collapse" aria-expanded="false">
-        <i class="bi bi-house me-2"></i>Kelas
-      </button>
-      <div class="collapse mt-2" id="kelas-collapse">
-        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-          <li><a href="/admin/grup/create" class="link-dark rounded">Tambah Kelas</a></li>
-          <li><a href="/admin/grup" class="link-dark rounded">Daftar Kelas</a></li>
-        </ul>
-      </div>
-    </li>
-    <li class="mb-3">
-      <button class="btn btn-outline-info border-light align-items-center rounded collapsed text-dark w-100 text-start" data-bs-toggle="collapse" data-bs-target="#tahun-collapse" aria-expanded="false">
-        <i class="bi bi-calendar me-2"></i>Tahun Ajaran
-      </button>
-      <div class="collapse mt-2" id="tahun-collapse">
-        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-          <li><a href="/admin/tahun/create" class="link-dark rounded">Tambah Tahun Ajaran</a></li>
-          <li><a href="/admin/tahun" class="link-dark rounded">Daftar Tahun Ajaran</a></li>
-        </ul>
-      </div>
-    </li>
-    <li class="mb-3">
-      <a href="/admin/pengaturan" class="text-decoration-none btn btn-outline-info border-light text-dark w-100 text-start"><i class="bi bi-gear me-2"></i> Pengaturan</a>
-    </li>
-    <li class="border-top my-3"></li>
-    <li class="mb-1">
-      <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
-        Akun
-      </button>
-      <div class="collapse" id="account-collapse">
-        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-          <li>
-            <form action="/keluar" method="post">
-              @csrf
-              <button type="submit" class="dropdown-item btn btn-danger ms-1"><i class="bi bi-escape mx-1"></i>Keluar</button>
-            </form>
-          </li>
-        </ul>
-      </div>
-    </li>
-  </ul>
-</div>
+@php
+    /*
+     * Menu sidebar untuk petugas (superadmin & tata usaha).
+     * Gaya mengikuti portal TKA: label bagian, ikon, caret, dan sub-menu
+     * dengan garis pohon. Pengaturan & Akun Pengguna hanya untuk superadmin.
+     */
+    $u = auth()->user();
+
+    $grupKesiswaan = [
+        ['label' => 'Tambah Siswa',   'url' => '/admin/siswa/create',   'aktif' => request()->is('admin/siswa/create')],
+        ['label' => 'Daftar Siswa',   'url' => '/admin/siswa',          'aktif' => request()->is('admin/siswa') || request()->is('admin/siswa/*/edit') || request()->is('admin/siswa/*') && !request()->is('admin/siswa/create', 'admin/siswa/import*')],
+        ['label' => 'Data Mutasi',    'url' => '/admin/mutasi',         'aktif' => request()->is('admin/mutasi*')],
+        ['label' => 'Impor Biodata',  'url' => '/admin/siswa/import',   'aktif' => request()->is('admin/siswa/import')],
+        ['label' => 'Impor Lengkap',  'url' => '/admin/siswa/import-lengkap', 'aktif' => request()->is('admin/siswa/import-lengkap')],
+        ['label' => 'Cetak / Ekspor PDF', 'url' => '/admin/print/daftar/preview', 'aktif' => request()->is('admin/print*')],
+    ];
+
+    $grupMaster = [
+        ['label' => 'Daftar Kelas',        'url' => '/admin/grup',        'aktif' => request()->is('admin/grup') || request()->is('admin/grup/*/edit')],
+        ['label' => 'Tambah Kelas',        'url' => '/admin/grup/create', 'aktif' => request()->is('admin/grup/create')],
+        ['label' => 'Daftar Tahun Ajaran', 'url' => '/admin/tahun',       'aktif' => request()->is('admin/tahun') || request()->is('admin/tahun/*/edit')],
+        ['label' => 'Tambah Tahun Ajaran', 'url' => '/admin/tahun/create','aktif' => request()->is('admin/tahun/create')],
+    ];
+
+    $grupAkun = [
+        ['label' => 'Daftar Akun', 'url' => '/admin/akun',        'aktif' => request()->is('admin/akun') || request()->is('admin/akun/*/edit')],
+        ['label' => 'Tambah Akun', 'url' => '/admin/akun/create', 'aktif' => request()->is('admin/akun/create')],
+    ];
+
+    $bukaKesiswaan = collect($grupKesiswaan)->contains('aktif', true)
+        || request()->is('admin/ayah*', 'admin/ibu*', 'admin/wali*', 'admin/biodata*');
+    $bukaMaster = collect($grupMaster)->contains('aktif', true);
+    $bukaAkun = collect($grupAkun)->contains('aktif', true);
+@endphp
+
+<ul class="side-menu">
+  <li class="side-menu-label">Menu Utama</li>
+
+  <li>
+    <a href="/dashboard" class="{{ request()->is('dashboard') ? 'active' : '' }}">
+      <span class="side-menu-icon"><i class="fas fa-tachometer-alt"></i></span>
+      <span class="side-menu-title">Dashboard</span>
+    </a>
+  </li>
+
+  <li>
+    <a href="#collapse-kesiswaan" data-bs-toggle="collapse" role="button"
+       aria-expanded="{{ $bukaKesiswaan ? 'true' : 'false' }}" aria-controls="collapse-kesiswaan">
+      <span class="side-menu-icon"><i class="fas fa-user-graduate"></i></span>
+      <span class="side-menu-title">Kesiswaan</span>
+      <span class="caret"></span>
+    </a>
+    <ul class="sub-menu collapse {{ $bukaKesiswaan ? 'show' : '' }}" id="collapse-kesiswaan">
+      @foreach ($grupKesiswaan as $item)
+        <li><a href="{{ $item['url'] }}" class="{{ $item['aktif'] ? 'active' : '' }}">{{ $item['label'] }}</a></li>
+      @endforeach
+    </ul>
+  </li>
+
+  <li>
+    <a href="#collapse-master" data-bs-toggle="collapse" role="button"
+       aria-expanded="{{ $bukaMaster ? 'true' : 'false' }}" aria-controls="collapse-master">
+      <span class="side-menu-icon"><i class="fas fa-school"></i></span>
+      <span class="side-menu-title">Data Master</span>
+      <span class="caret"></span>
+    </a>
+    <ul class="sub-menu collapse {{ $bukaMaster ? 'show' : '' }}" id="collapse-master">
+      @foreach ($grupMaster as $item)
+        <li><a href="{{ $item['url'] }}" class="{{ $item['aktif'] ? 'active' : '' }}">{{ $item['label'] }}</a></li>
+      @endforeach
+    </ul>
+  </li>
+
+  @if ($u->isSuperadmin())
+  <li class="side-menu-label">Manajemen Pengguna</li>
+
+  <li>
+    <a href="#collapse-akun" data-bs-toggle="collapse" role="button"
+       aria-expanded="{{ $bukaAkun ? 'true' : 'false' }}" aria-controls="collapse-akun">
+      <span class="side-menu-icon"><i class="fas fa-user-cog"></i></span>
+      <span class="side-menu-title">Akun Pengguna</span>
+      <span class="caret"></span>
+    </a>
+    <ul class="sub-menu collapse {{ $bukaAkun ? 'show' : '' }}" id="collapse-akun">
+      @foreach ($grupAkun as $item)
+        <li><a href="{{ $item['url'] }}" class="{{ $item['aktif'] ? 'active' : '' }}">{{ $item['label'] }}</a></li>
+      @endforeach
+    </ul>
+  </li>
+
+  <li>
+    <a href="/admin/pengaturan" class="{{ request()->is('admin/pengaturan*') ? 'active' : '' }}">
+      <span class="side-menu-icon"><i class="fas fa-cog"></i></span>
+      <span class="side-menu-title">Pengaturan</span>
+    </a>
+  </li>
+  @endif
+</ul>

@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
             'foto' => NULL,
             'nisn' => 'XXXXXXXXXX',
             'nis' => 'YYYYYYYYY',
-            'status' => 'admin',
+            'status' => 'superadmin',
             'email' => 'adminweb@gmail.com',
             'password' => Hash::make('admin123'),
             'jenis_kelamin' => 'L',
@@ -45,6 +45,19 @@ class DatabaseSeeder extends Seeder
             'email' => 'tesakunsiswa@gmail.com',
             'password' => Hash::make('siswa123'),
             'jenis_kelamin' => 'L',
+        ]);
+
+        DB::table('users')->insert([
+            'year_id' => 0,
+            'group_id' => 0,
+            'nama_lengkap' => 'Tata Usaha',
+            'foto' => NULL,
+            'nisn' => '9000000001',
+            'nis' => '9000000002',
+            'status' => 'tata_usaha',
+            'email' => 'tu@sekolah.sch.id',
+            'password' => Hash::make('tu12345'),
+            'jenis_kelamin' => 'P',
         ]);
 
         DB::table('biodatas')->insert([

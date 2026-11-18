@@ -16,7 +16,18 @@ class Setting extends Model
         'nama_sekolah'   => 'Buku Induk Siswa',
         'alamat_sekolah' => '',
         'logo'           => null,
+        // Kop cetak PDF (kertas surat)
+        'kop_baris1'     => '',   // contoh: PEMERINTAH PROVINSI SUMATERA BARAT
+        'kop_baris2'     => '',   // contoh: DINAS PENDIDIKAN
+        'kop_kontak'     => '',   // contoh: Jalan ... • e-mail : ... • Telp. ...
+        'kop_kiri'       => null, // gambar kop sisi kiri (path storage)
+        'kop_kanan'      => null, // gambar kop sisi kanan (path storage)
     ];
+
+    /**
+     * Kunci gambar yang bisa diunggah dari halaman Pengaturan.
+     */
+    public const GAMBAR = ['logo', 'kop_kiri', 'kop_kanan'];
 
     /**
      * Cache per-request agar tidak query berulang.
@@ -59,6 +70,15 @@ class Setting extends Model
             ? asset('storage/' . $logo)
             : asset('images/tut wuri handayani.png');
 
+        // Gambar kop cetak PDF: kiri (fallback ke logo aplikasi) dan kanan.
+        foreach (['kop_kiri', 'kop_kanan'] as $kunci) {
+            $path = $data[$kunci] ?? null;
+            $ada = $path && Storage::disk('public')->exists($path);
+
+            $data['has_' . $kunci] = (bool) $ada;
+            $data[$kunci . '_url'] = $ada ? asset('storage/' . $path) : null;
+        }
+
         return static::$cached = $data;
     }
 
@@ -83,6 +103,14 @@ class Setting extends Model
     {
         static::updateOrCreate(['key' => $key], ['value' => $value]);
 
+        static::$cached = null;
+    }
+
+    /**
+     * Buang cache agar data diambil ulang dari database.
+     */
+    public static function flushCache(): void
+    {
         static::$cached = null;
     }
 }

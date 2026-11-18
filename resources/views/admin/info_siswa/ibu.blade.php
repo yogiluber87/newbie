@@ -2,11 +2,6 @@
 
 @section('content')
     <div class="container card shadow my-3 p-3">
-      <div class="row justify-content-center">
-        <div class="col-lg-10">
-          <h3 class="text-uppercase fw-bold text-center">{{$title}}</h3>
-        </div>
-      </div>
       @if (($lanjut ?? false) && !empty($siswa))
         @include('admin.info_siswa._langkah', ['siswa' => $siswa, 'langkah' => 'ibu'])
       @endif

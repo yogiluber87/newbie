@@ -8,28 +8,8 @@
 </head>
 <body>
   <div>
-    @php
-      $logoPath = $setelan['has_logo']
-          ? storage_path('app/public/' . $setelan['logo'])
-          : public_path('images/tut wuri handayani.png');
-    @endphp
-    <table style="width: 100%; border-bottom: 3px double #000; margin-bottom: 10px;">
-      <tr>
-        <td style="width: 80px;">
-          <img src="{{ $logoPath }}" alt="Logo" width="65px">
-        </td>
-        <td style="text-align: center;">
-          <h2 style="margin: 0;">{{ $setelan['nama_sekolah'] }}</h2>
-          @if ($setelan['alamat_sekolah'])
-            <p style="margin: 4px 0 0;">{{ $setelan['alamat_sekolah'] }}</p>
-          @endif
-        </td>
-        <td style="width: 80px;"></td>
-      </tr>
-    </table>
-    <h3 style="text-align: center">Daftar Siswa</h3>
-    <hr>
-    <table style="border: 1px solid black; border-collapse: collapse;">
+    @include('printout.partials.kop_sekolah', ['judul' => 'Daftar Siswa'])
+    <table style="border: 1px solid black; border-collapse: collapse; margin-top: 10px;">
       <thead>
         <th style="border: 1px solid black; border-collapse: collapse;">No.</th>
         <th style="border: 1px solid black; border-collapse: collapse;">Nama</th>

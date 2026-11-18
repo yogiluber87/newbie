@@ -4,7 +4,6 @@
     <div class="container card shadow my-3 p-3">
       <div class="row justify-content-center">
         <div class="col-lg-10">
-          <h3 class="text-uppercase fw-bold text-center">{{$title}}</h3>
         </div>
       </div>
       <form action="/data-wali/{{ $res->uri }}" method="post" class="mx-3 my-3">
@@ -112,9 +111,11 @@
             </div>
           </div>
         </div>
-        <div class="d-grip gap-2 mb-3 w-100">
-          <p class="fw-light"><span class="text-danger fw-bold">*</span> pastikan data yang kamu masukkan benar dan sesuai ketentuan</p>
-          <button type="submit" class="btn btn-primary w-100"><i class="bi bi-cloud-check me-2"></i> Simpan</button>
+        <div class="mb-3">
+          <p class="fw-light mb-2"><span class="text-danger fw-bold">*</span> pastikan data yang kamu masukkan benar dan sesuai ketentuan</p>
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary btn-sm px-3"><i class="bi bi-cloud-check me-1"></i> Simpan</button>
+          </div>
         </div>
       </form>
     </div>

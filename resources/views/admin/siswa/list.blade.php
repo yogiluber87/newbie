@@ -8,18 +8,20 @@
             return trim((string) $v) !== '';
         });
       @endphp
-      <div class="row mt-3 mb-3 justify-content-center">
+      <div class="row mt-3 mb-3 justify-content-center align-items-center">
         <div class="col-lg-3">
-          
-          <h3>Daftar Siswa</h3>
+          <h4 class="mb-0" style="font-size:15px;font-weight:600;color:#3f5b64">
+            <i class="fas fa-users me-2"></i>Daftar Siswa
+          </h4>
+          <small class="text-muted">{{ $res->total() }} siswa ditemukan</small>
         </div>
         <div class="col-lg-6">
           <form action="/admin/siswa" method="get" id="formCariSiswa">
-            <div class="input-group mb-2">
+            <div class="input-group input-group-sm mb-2">
               <input type="text" class="form-control" placeholder="Cari nama, NISN, atau NIS.." name="cari" value="{{ $filters['cari'] ?? '' }}">
-              <button class="btn btn-outline-success" type="submit" title="Cari"><i class="bi bi-search"></i></button>
-              <button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#filterLanjutan" aria-expanded="{{ $adaFilter ? 'true' : 'false' }}" aria-controls="filterLanjutan" title="Filter lanjutan">
-                <i class="bi bi-funnel"></i> Filter
+              <button class="btn btn-outline-success btn-sm" type="submit" title="Cari"><i class="bi bi-search"></i></button>
+              <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#filterLanjutan" aria-expanded="{{ $adaFilter ? 'true' : 'false' }}" aria-controls="filterLanjutan" title="Filter lanjutan">
+                <i class="bi bi-funnel me-1"></i> Filter
               </button>
             </div>
 
@@ -100,8 +102,8 @@
                   </div>
                 </div>
                 <div class="d-flex flex-wrap gap-2 mt-3">
-                  <button class="btn btn-success btn-sm" type="submit"><i class="bi bi-funnel me-1"></i>Terapkan Filter</button>
-                  <a href="/admin/siswa?reset=1" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-counterclockwise me-1"></i>Reset</a>
+                  <button class="btn btn-success btn-sm" type="submit" title="Terapkan filter"><i class="bi bi-funnel me-1"></i> Terapkan Filter</button>
+                  <a href="/admin/siswa?reset=1" class="btn btn-outline-secondary btn-sm" title="Hapus semua filter"><i class="bi bi-arrow-counterclockwise me-1"></i> Reset</a>
                   <span class="small text-muted align-self-center">Filter bisa dikombinasikan dan disimpan otomatis sampai di-reset. Penghasilan dicek pada data ayah atau ibu; rentang tanggal mutasi otomatis hanya mencari siswa yang sudah mutasi.</span>
                 </div>
               </div>
@@ -111,47 +113,47 @@
             <div class="d-flex flex-wrap align-items-center gap-2 mt-2">
               <span class="small text-muted">Filter aktif:</span>
               @if (!empty($filters['cari']))
-                <span class="badge bg-success">Kata kunci: {{ $filters['cari'] }}</span>
+                <span class="badge bg-success" title="Filter pencarian nama/NISN sedang aktif. Klik Reset untuk menghapusnya">Kata kunci: {{ $filters['cari'] }}</span>
               @endif
               @if (!empty($filters['nisn']))
-                <span class="badge bg-success">NISN: {{ $filters['nisn'] }}</span>
+                <span class="badge bg-success" title="Filter NISN sedang aktif. Klik Reset untuk menghapusnya">NISN: {{ $filters['nisn'] }}</span>
               @endif
               @if (!empty($filters['nis']))
-                <span class="badge bg-success">NIS: {{ $filters['nis'] }}</span>
+                <span class="badge bg-success" title="Filter NIS sedang aktif. Klik Reset untuk menghapusnya">NIS: {{ $filters['nis'] }}</span>
               @endif
               @if (!empty($filters['tempat_tinggal']))
-                <span class="badge bg-success">Tempat tinggal: {{ $filters['tempat_tinggal'] }}</span>
+                <span class="badge bg-success" title="Filter tempat tinggal sedang aktif. Klik Reset untuk menghapusnya">Tempat tinggal: {{ $filters['tempat_tinggal'] }}</span>
               @endif
               @if (!empty($filters['group_id']))
-                <span class="badge bg-success">Kelas: {{ optional($kelas->firstWhere('id', (int) $filters['group_id']))->nama ?? $filters['group_id'] }}</span>
+                <span class="badge bg-success" title="Filter kelas sedang aktif. Klik Reset untuk menghapusnya">Kelas: {{ optional($kelas->firstWhere('id', (int) $filters['group_id']))->nama ?? $filters['group_id'] }}</span>
               @endif
               @if (!empty($filters['jenis_kelamin']))
-                <span class="badge bg-success">Jenis kelamin: {{ $filters['jenis_kelamin'] === 'L' ? 'Laki-laki' : 'Perempuan' }}</span>
+                <span class="badge bg-success" title="Filter jenis kelamin sedang aktif. Klik Reset untuk menghapusnya">Jenis kelamin: {{ $filters['jenis_kelamin'] === 'L' ? 'Laki-laki' : 'Perempuan' }}</span>
               @endif
               @if (!empty($filters['status_mutasi']))
-                <span class="badge bg-success">Mutasi: {{ $filters['status_mutasi'] === 'sudah' ? 'sudah mutasi' : 'belum mutasi' }}</span>
+                <span class="badge bg-success" title="Filter status mutasi sedang aktif. Klik Reset untuk menghapusnya">Mutasi: {{ $filters['status_mutasi'] === 'sudah' ? 'sudah mutasi' : 'belum mutasi' }}</span>
               @endif
               @if (!empty($filters['mutasi_dari']) || !empty($filters['mutasi_sampai']))
-                <span class="badge bg-success">Tanggal mutasi: {{ \App\Models\User::formatTanggalFilter($filters['mutasi_dari'] ?? null) ?? 'awal' }} s.d. {{ \App\Models\User::formatTanggalFilter($filters['mutasi_sampai'] ?? null) ?? 'akhir' }}</span>
+                <span class="badge bg-success" title="Filter tanggal mutasi sedang aktif. Klik Reset untuk menghapusnya">Tanggal mutasi: {{ \App\Models\User::formatTanggalFilter($filters['mutasi_dari'] ?? null) ?? 'awal' }} s.d. {{ \App\Models\User::formatTanggalFilter($filters['mutasi_sampai'] ?? null) ?? 'akhir' }}</span>
               @endif
               @if (!empty($filters['year_id']))
-                <span class="badge bg-success">Tahun masuk: {{ optional($tahun->firstWhere('id', (int) $filters['year_id']))->tahun_ajaran ?? $filters['year_id'] }}</span>
+                <span class="badge bg-success" title="Filter tahun masuk sedang aktif. Klik Reset untuk menghapusnya">Tahun masuk: {{ optional($tahun->firstWhere('id', (int) $filters['year_id']))->tahun_ajaran ?? $filters['year_id'] }}</span>
               @endif
               @if (!empty($filters['penghasilan_min']) || !empty($filters['penghasilan_max']))
-                <span class="badge bg-success">Penghasilan: Rp {{ number_format((int) ($filters['penghasilan_min'] ?? 0), 0, ',', '.') }} s.d. {{ !empty($filters['penghasilan_max']) ? 'Rp ' . number_format((int) $filters['penghasilan_max'], 0, ',', '.') : 'tanpa batas' }}</span>
+                <span class="badge bg-success" title="Filter penghasilan sedang aktif. Klik Reset untuk menghapusnya">Penghasilan: Rp {{ number_format((int) ($filters['penghasilan_min'] ?? 0), 0, ',', '.') }} s.d. {{ !empty($filters['penghasilan_max']) ? 'Rp ' . number_format((int) $filters['penghasilan_max'], 0, ',', '.') : 'tanpa batas' }}</span>
               @endif
             </div>
           @endif
         </div>
         <div class="col-lg-2">
-          <a href="/admin/print" class="btn btn-warning"><i class="bi bi-printer me-2"></i>Cetak</a>
+          <a href="/admin/print/daftar/preview" class="btn btn-warning btn-sm w-100"><i class="bi bi-printer me-1"></i> Cetak</a>
           <div class="dropdown mt-2">
-            <button class="btn btn-success w-100 dropdown-toggle" type="button" id="imporMenu" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="bi bi-upload me-2"></i>Impor
+            <button class="btn btn-success btn-sm w-100 dropdown-toggle" type="button" id="imporMenu" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-upload me-1"></i> Impor
             </button>
             <ul class="dropdown-menu" aria-labelledby="imporMenu">
-              <li><a class="dropdown-item" href="/admin/siswa/import"><i class="bi bi-person-plus me-2"></i>CSV Biasa (siswa baru)</a></li>
-              <li><a class="dropdown-item" href="/admin/siswa/import-lengkap"><i class="bi bi-database-add me-2"></i>CSV Lengkap (biodata, ortu, wali, mutasi)</a></li>
+              <li><a class="dropdown-item" href="/admin/siswa/import"><i class="bi bi-person-plus me-1"></i> CSV Biasa (siswa baru)</a></li>
+              <li><a class="dropdown-item" href="/admin/siswa/import-lengkap"><i class="bi bi-database-add me-1"></i> CSV Lengkap (biodata, ortu, wali, mutasi)</a></li>
             </ul>
           </div>
         </div>
@@ -213,24 +215,24 @@
               </button>
             </div>
             <div class="d-flex flex-wrap gap-2">
-              <button type="button" class="btn btn-dark btn-sm" onclick="eksporTerpilih()">
-                <i class="bi bi-filetype-csv me-1"></i>Ekspor Terpilih (CSV)
+              <button type="button" class="btn btn-dark btn-sm" title="Ekspor data siswa yang dicentang ke berkas CSV" onclick="eksporTerpilih()">
+                <i class="bi bi-filetype-csv me-1"></i> Ekspor Terpilih (CSV)
               </button>
-              <button type="button" class="btn btn-warning btn-sm" onclick="cetakTerpilih()">
-                <i class="bi bi-printer me-1"></i>Cetak Terpilih (PDF)
+              <button type="button" class="btn btn-warning btn-sm" title="Preview PDF data siswa yang dicentang sebelum dicetak" onclick="cetakTerpilih()">
+                <i class="bi bi-printer me-1"></i> Cetak Terpilih (PDF)
               </button>
               @if ($adaFilter)
-                <button type="button" class="btn btn-outline-warning btn-sm" onclick="cetakSemuaCari()">
-                  <i class="bi bi-printer me-1"></i>Cetak Hasil Pencarian
+                <button type="button" class="btn btn-outline-warning btn-sm" title="Preview PDF semua siswa yang cocok dengan pencarian" onclick="cetakSemuaCari()">
+                  <i class="bi bi-printer me-1"></i> Cetak Hasil Pencarian
                 </button>
               @endif
               @if ($adaFilter)
-                <button type="button" class="btn btn-outline-dark btn-sm" onclick="eksporSemuaCari()">
-                  <i class="bi bi-search me-1"></i>Ekspor Hasil Pencarian (CSV)
+                <button type="button" class="btn btn-outline-dark btn-sm" title="Ekspor semua siswa yang cocok dengan pencarian ke CSV" onclick="eksporSemuaCari()">
+                  <i class="bi bi-search me-1"></i> Ekspor Hasil Pencarian (CSV)
                 </button>
               @endif
-              <a href="/admin/siswa/ekspor-semua-csv{{ $filterAktif->isNotEmpty() ? '?' . http_build_query($filterAktif->toArray()) : '' }}" class="btn btn-outline-dark btn-sm">
-                <i class="bi bi-download me-1"></i>{{ $filterAktif->isNotEmpty() ? 'Ekspor Hasil Filter (CSV)' : 'Ekspor Semua (CSV)' }}
+              <a href="/admin/siswa/ekspor-semua-csv{{ $filterAktif->isNotEmpty() ? '?' . http_build_query($filterAktif->toArray()) : '' }}" class="btn btn-outline-dark btn-sm" title="{{ $filterAktif->isNotEmpty() ? 'Ekspor semua siswa sesuai filter aktif ke CSV' : 'Ekspor seluruh data siswa ke CSV' }}">
+                <i class="bi bi-download me-1"></i> {{ $filterAktif->isNotEmpty() ? 'Ekspor Hasil Filter (CSV)' : 'Ekspor Semua (CSV)' }}
               </a>
             </div>
           </div>
@@ -253,7 +255,7 @@
                   <td>
                     {{$item->nama_lengkap}}
                     @if ($item->status === 'mutasi')
-                      <span class="badge bg-warning text-dark" title="Siswa sudah pindah / termutasi"><i class="bi bi-arrow-left-right me-1"></i>Mutasi</span>
+                      <span class="badge bg-warning text-dark" title="Siswa sudah pindah / termutasi"><i class="bi bi-arrow-left-right me-1"></i> Mutasi</span>
                     @endif
                   </td>
                   <td>{{ optional($item->kelas)->nama ?? '-' }}</td>
@@ -285,10 +287,10 @@
                     <form action="/admin/siswa/{{$item->nisn}}" method="post">
                       @csrf
                       @method('delete')
-                      <button type="submit" class="btn btn-sm btn-danger me-1" onclick="return confirm('Anda yakin akan menghapus siswa ini?')"><i class="bi bi-trash"></i></button>
+                      <button type="submit" class="btn btn-sm btn-danger me-1" title="Hapus siswa" onclick="return confirm('Anda yakin akan menghapus siswa ini?')"><i class="bi bi-trash"></i></button>
                     </form>
-                    <a href="/admin/siswa/{{$item->nisn}}" class="btn btn-sm btn-info me-1"><i class="bi bi-eye"></i></a> 
-                    <a href="/admin/siswa/{{$item->nisn}}/edit" class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i></a>
+                    <a href="/admin/siswa/{{$item->nisn}}" class="btn btn-sm btn-info me-1" title="Lihat detail siswa"><i class="bi bi-eye"></i></a> 
+                    <a href="/admin/siswa/{{$item->nisn}}/edit" class="btn btn-sm btn-warning" title="Ubah data siswa"><i class="bi bi-pencil"></i></a>
                   </td>
                 </tr>
             @endforeach
@@ -308,7 +310,7 @@
                 <a href="/admin/siswa?reset=1" class="fw-bold">Hapus semua filter</a>
               </p>
             @endif
-            <a href="/admin/siswa/create" class="btn btn-primary btn-lg"><i class="bi bi-plus me-2"></i> Tambah Siswa</a>
+            <a href="/admin/siswa/create" class="btn btn-primary btn-sm px-3"><i class="bi bi-plus me-1"></i> Tambah Siswa</a>
           </div>
         </div>
     </div>
@@ -460,7 +462,7 @@
             return;
           }
 
-          kirim('/admin/print/terpilih', daftar, null);
+          kirim('/admin/print/terpilih/preview', daftar, null);
         };
 
         window.cetakSemuaCari = function () {
@@ -469,7 +471,7 @@
             return;
           }
 
-          kirim('/admin/print/terpilih', [], FILTER);
+          kirim('/admin/print/terpilih/preview', [], FILTER);
         };
 
         perbarui();

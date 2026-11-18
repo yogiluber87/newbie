@@ -42,11 +42,11 @@
                         <td>{{ $d['nama'] }}</td>
                         <td>
                           @if ($d['status'] === 'baru')
-                            <span class="badge bg-primary">baru</span>
+                            <span class="badge bg-primary" title="Siswa baru, akan ditambahkan ke database">baru</span>
                           @elseif ($d['status'] === 'diperbarui')
-                            <span class="badge bg-success">diperbarui</span>
+                            <span class="badge bg-success" title="Data siswa yang sudah ada diperbarui">diperbarui</span>
                           @else
-                            <span class="badge bg-danger">gagal</span>
+                            <span class="badge bg-danger" title="Baris gagal diimpor, lihat kolom pesan">gagal</span>
                           @endif
                         </td>
                         <td>{{ $d['pesan'] }}</td>
@@ -72,13 +72,13 @@
 
           <div class="mb-3 d-flex gap-2 flex-wrap">
             <a href="/admin/siswa/import-lengkap/template" class="btn btn-outline-secondary btn-sm">
-              <i class="bi bi-download me-2"></i>Unduh Contoh Format CSV
+              <i class="bi bi-download me-1"></i> Unduh Contoh Format CSV
             </a>
             <a href="/admin/siswa/import" class="btn btn-outline-secondary btn-sm">
-              <i class="bi bi-upload me-2"></i>Impor CSV Biasa (siswa baru saja)
+              <i class="bi bi-upload me-1"></i> Impor CSV Biasa (siswa baru saja)
             </a>
             <a href="/admin/siswa" class="btn btn-outline-secondary btn-sm">
-              <i class="bi bi-arrow-left me-2"></i>Daftar Siswa
+              <i class="bi bi-arrow-left me-1"></i> Daftar Siswa
             </a>
           </div>
 
@@ -101,11 +101,13 @@
               </label>
             </div>
 
-            <div class="row mb-3">
-              <p class="fw-light"><span class="text-danger fw-bold">*</span> pastikan berkas berasal dari aplikasi ini dan sudah benar</p>
-              <button type="submit" class="btn btn-primary w-100"><i class="bi bi-upload me-2"></i> Mulai Impor</button>
+            <div class="mb-3">
+              <p class="fw-light mb-2"><span class="text-danger fw-bold">*</span> pastikan berkas berasal dari aplikasi ini dan sudah benar</p>
+              <div class="d-flex justify-content-end gap-2">
+                <a href="/admin/siswa" class="btn btn-light btn-sm px-3 border">Batal</a>
+                <button type="submit" class="btn btn-primary btn-sm px-3"><i class="bi bi-upload me-1"></i> Mulai Impor</button>
+              </div>
             </div>
-            <a href="/admin/siswa" class="btn btn-light w-100">Batal</a>
           </form>
         </div>
       </div>

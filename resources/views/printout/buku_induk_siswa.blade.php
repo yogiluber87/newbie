@@ -8,7 +8,7 @@
 </head>
 <body>
   <div style="margin: 34px 20px;">
-    @include('printout.partials.kop_sekolah')
+    @include('printout.partials.kop_sekolah', ['judul' => 'Buku Induk Siswa'])
     @include('printout.partials.buku_induk', ['res' => $res])
   </div>
 </body>

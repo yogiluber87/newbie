@@ -1,4 +1,3 @@
-<h1 style="text-align: center">Buku Induk Siswa</h1>
     <table style="width: 100%">
       <tr>
         <td style="width:500px;">

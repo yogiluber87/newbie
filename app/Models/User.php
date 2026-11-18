@@ -12,6 +12,33 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    /**
+     * Peran (role) akun pengguna. Disimpan di kolom status.
+     *
+     * - superadmin : akses penuh, termasuk Pengaturan dan pembuatan akun Tata Usaha
+     * - tata_usaha : akses penuh ke data siswa/kelas/tahun/mutasi/cetak,
+     *                kecuali Pengaturan dan pengelolaan akun
+     * - siswa      : hanya melihat dan melengkapi datanya sendiri
+     *
+     * Nilai 'admin' lama tetap diterima dan diperlakukan sebagai superadmin.
+     */
+    public const ROLE_SUPERADMIN = 'superadmin';
+    public const ROLE_TATA_USAHA = 'tata_usaha';
+    public const ROLE_SISWA = 'siswa';
+
+    /**
+     * Peran yang boleh masuk ke area admin (dashboard & data siswa).
+     */
+    public const STAFF_ROLES = ['superadmin', 'tata_usaha', 'admin'];
+
+    /**
+     * Pilihan peran untuk form pengelolaan akun.
+     */
+    public const FORM_ROLES = [
+        self::ROLE_SUPERADMIN => 'Superadmin',
+        self::ROLE_TATA_USAHA => 'Tata Usaha',
+    ];
+
     protected $guarded = ['id'];
 
     /**
@@ -85,6 +112,47 @@ class User extends Authenticatable
 
     public function getRouteKeyName(){
         return 'nisn';
+    }
+
+    /**
+     * Apakah akun ini superadmin (termasuk akun 'admin' versi lama)?
+     */
+    public function isSuperadmin(): bool
+    {
+        return in_array($this->status, [self::ROLE_SUPERADMIN, 'admin'], true);
+    }
+
+    /**
+     * Apakah akun ini tata usaha?
+     */
+    public function isTataUsaha(): bool
+    {
+        return $this->status === self::ROLE_TATA_USAHA;
+    }
+
+    /**
+     * Apakah akun ini termasuk petugas (superadmin atau tata usaha)?
+     * Dipakai untuk membedakan petugas dari siswa.
+     */
+    public function isStaff(): bool
+    {
+        return in_array($this->status, self::STAFF_ROLES, true);
+    }
+
+    /**
+     * Nama peran untuk ditampilkan di halaman.
+     */
+    public function roleLabel(): string
+    {
+        if ($this->isSuperadmin()) {
+            return 'Superadmin';
+        }
+
+        if ($this->isTataUsaha()) {
+            return 'Tata Usaha';
+        }
+
+        return 'Siswa';
     }
 
     /**

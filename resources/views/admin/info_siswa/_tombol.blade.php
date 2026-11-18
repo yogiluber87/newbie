@@ -34,23 +34,23 @@
     dan bisa dilengkapi kapan saja dari halaman detail siswa.
   </p>
 
-  <div class="d-grid gap-2 w-100">
+  <div class="d-flex flex-wrap gap-2 justify-content-end align-items-center">
     @if ($lanjutAktif)
       <input type="hidden" name="lanjut" value="1">
-      <button type="submit" class="btn btn-primary w-100">
-        <i class="bi bi-cloud-check me-2"></i> Simpan & Lanjut ke {{ $berikutnya['label'] }}
-      </button>
-      <a href="{{ $berikutnya['url'] }}" class="btn btn-outline-secondary w-100">
-        <i class="bi bi-skip-forward me-2"></i> Lewati langkah ini
+      <a href="/admin/siswa/{{ $siswa->nisn }}" class="btn btn-link btn-sm text-muted me-auto">Berhenti dulu, lihat data siswa</a>
+      <a href="{{ $berikutnya['url'] }}" class="btn btn-outline-secondary btn-sm px-3">
+        <i class="bi bi-skip-forward me-1"></i> Lewati langkah ini
       </a>
-      <a href="/admin/siswa/{{ $siswa->nisn }}" class="btn btn-link btn-sm">Berhenti dulu, lihat data siswa</a>
+      <button type="submit" class="btn btn-primary btn-sm px-3">
+        <i class="bi bi-cloud-check me-1"></i> Simpan & Lanjut ke {{ $berikutnya['label'] }}
+      </button>
     @else
-      <button type="submit" class="btn btn-primary w-100">
-        <i class="bi bi-cloud-check me-2"></i> Simpan
-      </button>
-      <a href="/admin/siswa/{{ $siswa->nisn }}" class="btn btn-secondary w-100">
-        <i class="bi bi-arrow-left-circle me-2"></i> Kembali ke Data Siswa
+      <a href="/admin/siswa/{{ $siswa->nisn }}" class="btn btn-outline-secondary btn-sm px-3 me-auto">
+        <i class="bi bi-arrow-left-circle me-1"></i> Kembali ke Data Siswa
       </a>
+      <button type="submit" class="btn btn-primary btn-sm px-3">
+        <i class="bi bi-cloud-check me-1"></i> Simpan
+      </button>
     @endif
   </div>
 </div>

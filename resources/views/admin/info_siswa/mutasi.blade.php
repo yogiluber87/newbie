@@ -2,9 +2,6 @@
 
 @section('content')
     <div class="container card shadow mt-3 mb-3 p-3">
-      <div class="row mb-3">
-        <h3 class="text-uppercase text-center">{{$title}}</h3>
-      </div>
       <div class="row justify-content-center">
         <div class="col-lg-8">
           <form action="/admin/mutasi/{{$res->nisn}}" method="post">
@@ -36,9 +33,11 @@
                 </div>                   
               @enderror
             </div>
-            <div class="d-grip gap-2 mb-3 w-100">
-              <p class="fw-light"><span class="text-danger fw-bold">*</span> pastikan data yang kamu masukkan benar dan sesuai ketentuan</p>
-              <button type="submit" class="btn btn-primary w-100"><i class="bi bi-cloud-check me-2"></i> Simpan</button>
+            <div class="mb-3">
+              <p class="fw-light mb-2"><span class="text-danger fw-bold">*</span> pastikan data yang kamu masukkan benar dan sesuai ketentuan</p>
+              <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary btn-sm px-3"><i class="bi bi-cloud-check me-1"></i> Simpan</button>
+              </div>
             </div>
           </form>
         </div>

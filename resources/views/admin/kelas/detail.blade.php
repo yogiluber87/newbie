@@ -2,9 +2,6 @@
 
 @section('content')
     <div class="container card shadow mt-3 mb-3 p-3">
-      <div class="row mb-3">
-        <h3 class="text-center text-uppercase">{{$title}}</h3>
-      </div>
       <div class="row justify-content-center mb-3">
         @if(count($res->siswa) > 0)
         <div class="col-lg-11">
@@ -41,9 +38,11 @@
                   </div>
               @enderror
             </div>
-            <div class="d-grip gap-2 mb-3 w-100">
-              <p class="fw-light"><span class="text-danger fw-bold">*</span> pastikan data yang kamu masukkan benar dan sesuai ketentuan</p>
-              <button type="submit" class="btn btn-primary w-100"><i class="bi bi-cloud-check me-2"></i> Simpan</button>
+            <div class="mb-3">
+              <p class="fw-light mb-2"><span class="text-danger fw-bold">*</span> pastikan data yang kamu masukkan benar dan sesuai ketentuan</p>
+              <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary btn-sm px-3"><i class="bi bi-cloud-check me-1"></i> Simpan</button>
+              </div>
             </div>
           </form>
         </div>
@@ -51,7 +50,7 @@
         <div class="col-lg-9 text-center">
           <img src="/images/empty.jpg" alt="" class="img-fluid" width="200px">
           <h2 class="text-capitalize text-warning fw-bold">data siswa kosong</h2>
-          <a href="/admin/siswa/create" class="btn btn-primary btn-lg"><i class="bi bi-plus me-2"></i> Tambah Siswa</a>
+          <a href="/admin/siswa/create" class="btn btn-primary btn-sm px-3"><i class="bi bi-plus me-1"></i> Tambah Siswa</a>
         </div>
         @endif
       </div>

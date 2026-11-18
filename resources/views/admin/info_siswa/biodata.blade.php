@@ -73,9 +73,9 @@
                     @endforeach
                   </ul>
                   <p class="small text-muted text-center mb-3">
-                    <span class="badge bg-danger">Merah</span> belum diisi &middot;
-                    <span class="badge bg-warning text-dark">Kuning</span> sebagian &middot;
-                    <span class="badge bg-success">Hijau</span> lengkap
+                    <span class="badge bg-danger" title="Bagian ini belum diisi sama sekali">Merah</span> belum diisi &middot;
+                    <span class="badge bg-warning text-dark" title="Sebagian kolom sudah diisi">Kuning</span> sebagian &middot;
+                    <span class="badge bg-success" title="Semua kolom wajib sudah diisi">Hijau</span> lengkap
                   </p>
                   <!-- Tabs navs -->
 
@@ -87,7 +87,6 @@
                       role="tabpanel"
                       aria-labelledby="ex2-tab-1"
                     >
-                    <h3 class="text-uppercase text-center">{{$title}}</h3>
                       <div class="input-group mb-3">
                         <span class="input-group-text bg-light">Alamat</span>
                         <input type="text" class="form-control @error('alamat') is-invalid @enderror" placeholder="Contoh : Jl. Kemuning No.7" name="alamat" value="{{$res->alamat}}">
@@ -168,7 +167,6 @@
                       role="tabpanel"
                       aria-labelledby="ex2-tab-2"
                     >
-                      <h3 class="text-uppercase text-center">{{$title}}</h3>
                       <div class="input-group mb-3">
                         <span class="input-group-text bg-light">Bahasa sehari-hari</span>
                         <input type="text" class="form-control @error('bahasa') is-invalid @enderror" placeholder="Contoh : Bahasa Indonesia" name="bahasa" value="{{$res->bahasa}}">
@@ -242,7 +240,6 @@
                       role="tabpanel"
                       aria-labelledby="ex2-tab-3"
                     > 
-                      <h3 class="text-uppercase text-center">{{$title}}</h3>
                       <div class="input-group mb-3">
                         <span class="input-group-text bg-light">Riwayat penyakit</span>
                         <input type="text" class="form-control @error('penyakit') is-invalid @enderror" placeholder="Contoh : Asma" name="penyakit" value="{{$res->penyakit}}">

@@ -18,7 +18,7 @@ class Authorization extends Controller
         ]);
         if (Auth::attempt($credentials)){
             $request->session()->regenerate();
-            if(auth()->user()->status == 'admin'){
+            if(auth()->user()->isStaff()){
                 return redirect()->intended('/dashboard');
             }
             return redirect()->intended('/home');
@@ -34,7 +34,7 @@ class Authorization extends Controller
     }
 
     public function adjust(){
-        if(auth()->user()->status == 'admin'){
+        if(auth()->user()->isStaff()){
             return redirect()->intended('/dashboard');
         }
         return redirect()->intended('/home');

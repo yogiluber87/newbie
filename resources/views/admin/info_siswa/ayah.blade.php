@@ -2,11 +2,6 @@
 
 @section('content')
     <div class="container card shadow my-3 p-3">
-      <div class="row justify-content-center">
-        <div class="col-lg-10">
-          <h3 class="text-uppercase fw-bold text-center">{{ $title }}</h3>
-        </div>
-      </div>
       @if (($lanjut ?? false) && !empty($siswa))
         @include('admin.info_siswa._langkah', ['siswa' => $siswa, 'langkah' => 'ayah'])
       @endif
@@ -116,13 +111,15 @@
         @if (!empty($siswa))
   @include('admin.info_siswa._tombol', ['siswa' => $siswa, 'langkah' => 'ayah', 'lanjut' => $lanjut ?? false])
 @else
-  <div class="d-grid gap-2 mb-3 w-100">
-    <p class="fw-light">
+  <div class="mb-3">
+    <p class="fw-light mb-2">
       <span class="text-danger fw-bold">*</span> pastikan data yang kamu masukkan benar dan sesuai ketentuan
     </p>
-    <button type="submit" class="btn btn-primary w-100">
-      <i class="bi bi-cloud-check me-2"></i> Simpan
-    </button>
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn btn-primary btn-sm px-3">
+        <i class="bi bi-cloud-check me-1"></i> Simpan
+      </button>
+    </div>
   </div>
 @endif
       </form>

@@ -10,6 +10,7 @@ use App\Http\Controllers\TahunController;
 use App\Http\Controllers\SiswaImportController;
 use App\Http\Controllers\SiswaDataController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\StaffController;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,13 +69,27 @@ Route::get('admin/mutasi', [Admin::class, 'list_mutasi'])->middleware('admin');
 Route::get('admin/mutasi/{siswa}', [Admin::class, 'mutasi_form'])->middleware('admin');
 Route::post('admin/mutasi/{siswa}', [Admin::class, 'edit_mutasi'])->middleware('admin');
 Route::delete('/admin/mutasi/{mutation}', [Admin::class, 'delete_mutasi'])->name('mutasi.delete');
-Route::get('/admin/pengaturan', [SettingController::class, 'edit'])->middleware('admin');
-Route::post('/admin/pengaturan', [SettingController::class, 'update'])->middleware('admin');
+Route::get('/admin/pengaturan', [SettingController::class, 'edit'])->middleware('superadmin');
+Route::post('/admin/pengaturan', [SettingController::class, 'update'])->middleware('superadmin');
+
+// Akun petugas (hanya superadmin): menambah & mengelola akun Tata Usaha
+Route::resource('/admin/akun', StaffController::class)
+    ->except(['show'])
+    ->parameters(['akun' => 'akun'])
+    ->middleware('superadmin');
 Route::get('admin/print', [Printer::class, 'daftar_siswa'])->middleware('admin');
+Route::get('admin/print/daftar/preview', [Printer::class, 'preview_daftar'])->middleware('admin');
 Route::post('admin/print/terpilih', [Printer::class, 'buku_induk_pilihan'])->middleware('admin');
+Route::post('admin/print/terpilih/preview', [Printer::class, 'siapkan_preview_pilihan'])->middleware('admin');
+Route::get('admin/print/terpilih/preview', [Printer::class, 'preview_pilihan'])->middleware('admin');
+Route::get('admin/print/terpilih/berkas', [Printer::class, 'berkas_pilihan'])->middleware('admin');
+Route::get('admin/print/{siswa}/preview', [Printer::class, 'preview_siswa'])->middleware('auth');
 Route::get('admin/print/{siswa}', [Printer::class, 'data_siswa'])->middleware('auth');
 
 // // tampil semua mutasi
 // Route::get('/admin/mutasi', [AdminController::class, 'index']);
+
+
+
 
 
