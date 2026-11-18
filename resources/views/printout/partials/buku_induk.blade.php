@@ -170,7 +170,7 @@
         <tr>
           <td style="width:350px;">Penghasilan perbulan Ayah</td>
           <td>:</td>
-          <td>{{'Rp. '.number_format(optional($res->ayah)->penghasilan, 2,',', '.')}}</td>
+          <td>{{ 'Rp. ' . number_format((float) (optional($res->ayah)->penghasilan ?? 0), 2, ',', '.') }}</td>
         </tr>
         <tr>
           <td style="width:350px;">Nomor Telefon</td>
@@ -225,7 +225,7 @@
         <tr>
           <td style="width:350px;">Penghasilan perbulan ibu</td>
           <td>:</td>
-          <td>{{'Rp. '.number_format(optional($res->ibu)->penghasilan, 2,',', '.')}}</td>
+          <td>{{ 'Rp. ' . number_format((float) (optional($res->ibu)->penghasilan ?? 0), 2, ',', '.') }}</td>
         </tr>
         <tr>
           <td style="width:350px;">Nomor Telefon</td>

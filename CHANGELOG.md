@@ -9,6 +9,31 @@ Urutan bagian: **Ditambahkan**, **Diubah**, **Diperbaiki**, **Keamanan**, **Cata
 
 Belum ada perubahan.
 
+## [2.0.0] - 2026-11-18
+
+### Diubah
+
+- **Framework dinaikkan dari Laravel 8.83.29 ke Laravel 13.43.0** (Laravel 8 sudah EOL sejak 24 Januari 2023 dan tidak lagi menerima patch keamanan).
+- PHP minimal sekarang **8.3** (sebelumnya 7.3–8.1). Cocok dengan Laravel 13 dan PHP 8.3 di hosting.
+- `barryvdh/laravel-dompdf` 2.2 → **3.1.2** (dompdf 2.x punya beberapa security advisory), `laravel/sanctum` 2.15 → **4.5.0**, `laravel/tinker` 2.10 → **3.2.0**, `guzzlehttp/guzzle` 7.x → **8.5.2**.
+- Alat uji: `phpunit/phpunit` 9.6 → **12.5.44**, `nunomaduro/collision` 5 → **8.9.6**, `facade/ignition` diganti `spatie/laravel-ignition` 2.12.
+- Middleware CORS memakai bawaan framework `Illuminate\Http\Middleware\HandleCors`; paket `fruitcake/laravel-cors` dilepas.
+- `phpunit.xml` dimigrasikan ke skema PHPUnit 12 (tetap memakai database uji `db_data_induk_test`).
+
+### Diperbaiki
+
+- Peringatan `number_format(): Passing null to parameter #1` saat mencetak buku induk dihilangkan (penghasilan ayah/ibu kosong kini dihitung 0).
+
+### Keamanan
+
+- `composer audit` bersih: tidak ada paket dengan security advisory yang terpasang.
+
+### Catatan teknis
+
+- 57 tes / 277 assertion lulus di Laravel 13 + PHP 8.3.
+- `config:cache`, `route:cache`, `view:cache` diverifikasi berjalan (siap produksi).
+- Hosting cPanel wajib memakai **PHP 8.3 atau lebih baru**; cek lewat `deploy/cpanel/cek-server.php`.
+
 ## [1.3.0] - 2026-11-18
 
 ### Ditambahkan
@@ -96,6 +121,7 @@ Belum ada perubahan.
 
 | Versi | Tanggal | Commit terakhir |
 | ----- | ------- | --------------- |
+| 2.0.0 | 2026-11-18 | `92b9806` |
 | 1.3.0 | 2026-11-18 | `1c29f92` |
 | 1.2.0 | 2026-11-17 | `de85803` |
 | 1.1.0 | 2026-11-15 | `0a68d51` |

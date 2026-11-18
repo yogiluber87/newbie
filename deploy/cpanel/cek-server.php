@@ -29,6 +29,7 @@ function ya(bool $ok): string
 
 echo "=== INFORMASI SERVER ===\n";
 baris('PHP versi', PHP_VERSION);
+baris('PHP >= 8.3 (Laravel 13)', ya(version_compare(PHP_VERSION, '8.3.0', '>=')));
 baris('SAPI', PHP_SAPI);
 baris('DOCUMENT_ROOT', $_SERVER['DOCUMENT_ROOT'] ?? '-');
 baris('Folder skrip ini', $akar);

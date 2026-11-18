@@ -8,6 +8,13 @@ Semua berkas pendukung ada di folder `deploy/cpanel/`.
 Laravel **tidak boleh** ditaruh langsung di `public_html`. Hanya isi folder `public/`
 yang boleh diakses lewat web.
 
+## Kebutuhan server
+
+- **PHP 8.3 atau lebih baru** (Laravel 13). Di cPanel: MultiPHP Manager.
+- Ekstensi: `pdo_mysql`, `mbstring`, `openssl`, `tokenizer`, `xml`, `ctype`, `json`,
+  `bcmath`, `fileinfo`, `gd`, `zip` (cek otomatis lewat `cek-server.php`).
+- MySQL 8 atau MariaDB 10.3 ke atas.
+
 ```
 /home/USERNAME/induk/            <- seluruh proyek (app, vendor, .env, storage)
 /home/USERNAME/induk/public/     <- satu-satunya folder yang dibuka ke internet
